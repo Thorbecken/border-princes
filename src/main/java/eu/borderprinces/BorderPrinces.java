@@ -2,7 +2,6 @@ package eu.borderprinces;
 
 import eu.borderprinces.entities.*;
 import eu.borderprinces.map.Map;
-import eu.borderprinces.map.MapUtils;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
 
@@ -21,12 +20,12 @@ public class BorderPrinces {
         while (!input.equals(ConsoleActions.QUIT.action)) {
             System.out.println("\u001B[32m" + Map.printTile(game));
             input = sc.nextLine();
-            processInput(input, game, sc);
+            game = processInput(input, game, sc);
             endTurn(game);
         }
     }
 
-    private static void processInput(String input, Game game, Scanner sc) {
+    private static Game processInput(String input, Game game, Scanner sc) {
         input = checkInput(input, game, sc);
 
         ConsoleActions consoleAction = ConsoleActions.get(input);
@@ -46,11 +45,12 @@ public class BorderPrinces {
                 System.out.println("select one of the following scenarios");
                 ScenarioMaps.scenarios.keySet().forEach(System.out::println);
                 input = sc.nextLine();
-                game = ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
+                return ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
             }
             default -> {
             }
         }
+        return game;
     }
 
     private static String checkInput(String input, Game game, Scanner sc) {
@@ -73,9 +73,9 @@ public class BorderPrinces {
     }
 
     private static void checkState(Game game) {
-        if (game.playerBuildings.isEmpty()){
+        if (game.playerBuildings.isEmpty()) {
             throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
-        } else if(game.monsterBuildings.isEmpty()){
+        } else if (game.monsterBuildings.isEmpty()) {
             throw new RuntimeException("YOU WIN!");
         }
     }
@@ -88,11 +88,11 @@ public class BorderPrinces {
     }
 
     private static void buildingChecks(Game game) {
-game.monsterBuildings.stream()
-        .map(Building::getTile)
-        .filter(t -> t.getUnit() == null)
-        .map(Tile::getBuilding)
-        .map(x -> ((Lair) x))
-        .forEach(lair -> lair.takeTurn(game));
+        game.monsterBuildings.stream()
+                .map(Building::getTile)
+                .filter(t -> t.getUnit() == null)
+                .map(Tile::getBuilding)
+                .map(x -> ((Lair) x))
+                .forEach(lair -> lair.takeTurn(game));
     }
 }

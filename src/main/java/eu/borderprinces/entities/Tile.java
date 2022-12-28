@@ -4,9 +4,6 @@ import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
-import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
-import static eu.borderprinces.BorderPrincesConstants.VILLAGE;
-
 public class Tile {
 
     @Getter
@@ -21,15 +18,7 @@ public class Tile {
     private Unit unit;
 
     public Tile(String terrain, int row, int column) {
-        if (VILLAGE.equals(terrain)){
-            setTerrain("-");
-            createBuilding(terrain);
-        } else if (MONSTER_LAIR.equals(terrain)){
-            setTerrain("-");
-            createLair(terrain);
-        }else {
-            setTerrain(terrain);
-        }
+        setTerrain(terrain);
         this.row = row;
         this.column = column;
     }
@@ -50,12 +39,12 @@ public class Tile {
         setBuilding(this.building);
     }
 
-    private void createLair(String building) {
+    public void createLair(String building) {
         this.building = new Lair(this, building);
         setBuilding(this.building);
     }
 
-    public void setBuilding(Building building){
+    public void setBuilding(Building building) {
         if (this.unit != null) {
             setCurrentIcon(this.unit.getIcon());
         } else if (this.building != null) {
@@ -85,10 +74,11 @@ public class Tile {
         return unit;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     public void destroyBuilding(Game game) {
         game.monsterBuildings.remove(this.building);
         game.playerBuildings.remove(this.building);
-        if (game.playerBuildings.isEmpty()){
+        if (game.playerBuildings.isEmpty()) {
             throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
         }
         this.building = null;
@@ -102,7 +92,7 @@ public class Tile {
     public int getDistance(Tile targetTile, Tile currentTile) {
         int rd = targetTile.getRow() - currentTile.getRow();
         int cd = targetTile.getColumn() - currentTile.getColumn();
-        return rd+cd;
+        return rd + cd;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package eu.borderprinces.entities;
 
-import eu.borderprinces.BorderPrinces;
-import lombok.Data;
 import lombok.NonNull;
 
 import java.util.Random;

@@ -1,8 +1,13 @@
 package eu.borderprinces.map;
 
-import eu.borderprinces.entities.*;
+import eu.borderprinces.entities.Game;
+import eu.borderprinces.entities.Lair;
+import eu.borderprinces.entities.Player;
+import eu.borderprinces.entities.Tile;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import static eu.borderprinces.BorderPrincesConstants.*;
 
@@ -10,44 +15,42 @@ public class ScenarioLoader {
 
 
     public static Game createGame(HashMap<Integer, HashMap<Integer, String>> scenario) {
+        Random random = new Random();
         Game game = new Game(MapUtils.toScenario(scenario));
-        generatePlayer(game);
-        generatePlayerBuildings(game);
-        generateLairs(game);
-//        generateMonsters(game);
+        List<Tile> bareGroundTiles = game.scenario.values().stream()
+                .flatMap(x -> x.values().stream())
+                .filter(x -> x.getIcon().equals(BARE_GROUND))
+                .toList();
+
+        List<Tile> playerStartingTiles = List.of(bareGroundTiles.get(random.nextInt(bareGroundTiles.size())));
+        List<Tile> monsterTiles = bareGroundTiles.stream()
+                .filter(monsterTile -> !playerStartingTiles.contains(monsterTile))
+                .toList();
+
+        generatePlayer(playerStartingTiles, game);
+        generatePlayerBuildings(playerStartingTiles, game);
+        generateLairs(monsterTiles, game);
 
         return game;
     }
 
-    private static void generatePlayer(Game game) {
-        Tile startingTile = game.scenario.values()
-                .stream().flatMap(x -> x.values().stream())
-                .filter(x -> x.getBuilding() != null)
-                .filter(x -> VILLAGE.equals(x.getBuilding().getIcon()))
-                .findAny()
-                .orElseThrow();
-        new Player(startingTile, PLAYER,game);
+    private static void generatePlayer(List<Tile> playerStartingTiles, Game game) {
+        Random random = new Random();
+        Tile StartingTile = playerStartingTiles.get(random.nextInt(playerStartingTiles.size()));
+        new Player(StartingTile, PLAYER, game);
     }
 
-    private static void generatePlayerBuildings(Game game) {
-        game.scenario.values().stream()
-                .flatMap(x -> x.values().stream())
-                .filter(x -> x.getBuilding() != null)
-                .filter(x -> VILLAGE.equals(x.getBuilding().getIcon()))
-                .forEach(village -> game.playerBuildings.add(village.getBuilding()));
+    private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {
+        playerStartingTiles.forEach(village -> {
+            village.createBuilding(VILLAGE);
+            game.playerBuildings.add(village.getBuilding());
+        });
     }
 
-    private static void generateLairs(Game game) {
-        game.scenario.values().stream()
-                .flatMap(x -> x.values().stream())
-                .filter(x -> x.getBuilding() != null)
-                .filter(x -> MONSTER_LAIR.equals(x.getBuilding().getIcon()))
-                .forEach(lair -> game.monsterBuildings.add(((Lair) lair.getBuilding())));
-    }
-
-    private static void generateMonsters(Game game) {
-        game.monsterBuildings.stream()
-                .map(Building::getTile)
-                .forEach(lair -> lair.setUnit(new Monster(lair, MONSTER, game)));
+    private static void generateLairs(List<Tile> monsterStartingTiles, Game game) {
+        monsterStartingTiles.forEach(lair -> {
+            lair.createLair(MONSTER_LAIR);
+            game.monsterBuildings.add(((Lair) lair.getBuilding()));
+        });
     }
 }
