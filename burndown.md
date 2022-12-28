@@ -1,5 +1,5 @@
 # Border princes
-Second version wThe first version wil have the following features:
+The first version wil have the following features:
 
 ~~BP-001: The game can show a 32*32 map on the console.~~
 
