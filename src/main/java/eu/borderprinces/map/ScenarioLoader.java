@@ -1,7 +1,6 @@
 package eu.borderprinces.map;
 
 import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.Lair;
 import eu.borderprinces.entities.Player;
 import eu.borderprinces.entities.Tile;
 
@@ -37,20 +36,20 @@ public class ScenarioLoader {
     private static void generatePlayer(List<Tile> playerStartingTiles, Game game) {
         Random random = new Random();
         Tile StartingTile = playerStartingTiles.get(random.nextInt(playerStartingTiles.size()));
-        new Player(StartingTile, PLAYER, game);
+        new Player(TEAM_PLAYER, StartingTile, PLAYER, game);
     }
 
     private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {
         playerStartingTiles.forEach(village -> {
             village.createBuilding(VILLAGE);
-            game.playerBuildings.add(village.getBuilding());
+            game.buildings.add(village.getBuilding());
         });
     }
 
     private static void generateLairs(List<Tile> monsterStartingTiles, Game game) {
         monsterStartingTiles.forEach(lair -> {
             lair.createLair(MONSTER_LAIR);
-            game.monsterBuildings.add(((Lair) lair.getBuilding()));
+            game.buildings.add(lair.getBuilding());
         });
     }
 }

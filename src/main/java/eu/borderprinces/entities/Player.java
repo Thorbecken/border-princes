@@ -6,8 +6,9 @@ import java.util.EnumSet;
 
 public class Player extends Unit {
 
-    public Player(Tile tile, String icon, Game game) {
-        super(tile, icon);
+    public Player(long teamId, Tile tile, String icon, Game game) {
+        super(teamId, tile, icon);
+        game.units.add(this);
         game.player = this;
     }
 

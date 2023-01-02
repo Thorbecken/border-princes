@@ -1,6 +1,5 @@
 package eu.borderprinces.entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -8,12 +7,9 @@ import java.util.Optional;
 public class Game {
 
     public HashMap<Integer, HashMap<Integer, Tile>> scenario;
-    public List<Lair> monsterBuildings = new ArrayList<>();
-    public List<Monster> monsters = new ArrayList<>();
-
+    public List<Building> buildings;
+    public List<Unit> units;
     public Player player;
-
-    public List<Building> playerBuildings = new ArrayList<>();
 
     public Game(HashMap<Integer, HashMap<Integer, Tile>> scenario){
         this.scenario = scenario;

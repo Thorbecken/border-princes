@@ -5,16 +5,17 @@ import lombok.NonNull;
 import java.util.Comparator;
 import java.util.Random;
 
+import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
 import static eu.borderprinces.BorderPrincesConstants.VILLAGE;
 
 public class Monster extends Unit {
 
     Game game;
 
-    public Monster(@NonNull Tile tile, @NonNull String icon, @NonNull Game game) {
-        super(tile, icon);
+    public Monster(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game) {
+        super(teamid, tile, icon);
         this.game = game;
-        game.monsters.add(this);
+        game.units.add(this);
     }
 
     public void move() {
@@ -59,7 +60,8 @@ public class Monster extends Unit {
     }
 
     private Tile getNearestVillage(Tile tile, Game game) {
-        return game.playerBuildings.stream()
+        return game.buildings.stream()
+                .filter(b -> TEAM_PLAYER.equals(b.getTeamId()))
                 .map(Building::getTile)
                 .min(Comparator.comparingInt(x -> x.getDistance(x, tile)))
                 .orElseThrow();

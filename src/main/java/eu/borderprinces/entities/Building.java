@@ -3,16 +3,16 @@ package eu.borderprinces.entities;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.Random;
-
 @Data
 public class Building {
 
+    private Long teamId;
     private final Tile tile;
 
     private final String icon;
 
-    public Building(@NonNull Tile tile, @NonNull String icon) {
+    public Building(long teamId, @NonNull Tile tile, @NonNull String icon) {
+        this.teamId = teamId;
         this.tile = tile;
         this.icon = icon;
     }
@@ -22,13 +22,5 @@ public class Building {
         return "Building{" +
                 "icon='" + icon + '\'' +
                 '}';
-    }
-
-    public void takeTurn() {
-        Random random = new Random();
-        int change = random.nextInt(10);
-        if (change == 0) {
-
-        }
     }
 }

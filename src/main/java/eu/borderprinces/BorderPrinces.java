@@ -8,7 +8,7 @@ import eu.borderprinces.map.ScenarioMaps;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
+import static eu.borderprinces.BorderPrincesConstants.*;
 
 public class BorderPrinces {
 
@@ -73,26 +73,30 @@ public class BorderPrinces {
     }
 
     private static void checkState(Game game) {
-        if (game.playerBuildings.isEmpty()) {
+        if (game.buildings.stream().map(Building::getTeamId).noneMatch(b -> b.equals(TEAM_PLAYER))) {
             throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
-        } else if (game.monsterBuildings.isEmpty()) {
+        } else if (game.buildings.stream().map(Building::getTeamId).allMatch(b -> b.equals(TEAM_PLAYER))) {
             throw new RuntimeException("YOU WIN!");
         }
     }
 
     private static void moveUnits(Game game) {
-        game.monsters.forEach(Monster::move);
-        game.monsters = game.monsters.stream()
-                .filter(monster -> monster.getHealth() > 0)
+        game.units.stream()
+                .filter(m -> m instanceof Monster)
+                .map(u -> ((Monster) u))
+                .forEach(Monster::move);
+        game.units = game.units.stream()
+                .filter(unit -> unit.getHealth() > 0)
                 .collect(Collectors.toList());
     }
 
     private static void buildingChecks(Game game) {
-        game.monsterBuildings.stream()
+        game.buildings.stream()
+                .filter(b -> b instanceof Lair)
                 .map(Building::getTile)
                 .filter(t -> t.getUnit() == null)
                 .map(Tile::getBuilding)
-                .map(x -> ((Lair) x))
+                .map(b -> ((Lair) b))
                 .forEach(lair -> lair.takeTurn(game));
     }
 }

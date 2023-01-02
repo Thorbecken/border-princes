@@ -13,12 +13,14 @@ import static eu.borderprinces.BorderPrincesConstants.PLAYER;
 @Data
 public class Unit {
 
+    private long teamId;
     private int health;
 
     private Tile tile;
     private final String icon;
 
-    public Unit(@NonNull Tile tile, @NonNull String icon) {
+    public Unit(long teamId, @NonNull Tile tile, @NonNull String icon) {
+        this.teamId = teamId;
         if(MONSTER.equals(icon)){
             this.health = 1;
         } else if (PLAYER.equals(icon)){

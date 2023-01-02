@@ -4,6 +4,9 @@ import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
+import static eu.borderprinces.BorderPrincesConstants.TEAM_MONSTERS;
+import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
+
 public class Tile {
 
     @Getter
@@ -35,12 +38,12 @@ public class Tile {
     }
 
     public void createBuilding(String building) {
-        this.building = new Building(this, building);
+        this.building = new Building(TEAM_PLAYER,this, building);
         setBuilding(this.building);
     }
 
     public void createLair(String building) {
-        this.building = new Lair(this, building);
+        this.building = new Lair(TEAM_MONSTERS, this, building);
         setBuilding(this.building);
     }
 
@@ -74,11 +77,9 @@ public class Tile {
         return unit;
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     public void destroyBuilding(Game game) {
-        game.monsterBuildings.remove(this.building);
-        game.playerBuildings.remove(this.building);
-        if (game.playerBuildings.isEmpty()) {
+        game.buildings.remove(this.building);
+        if (game.buildings.stream().map(Building::getTeamId).noneMatch(b -> b.equals(TEAM_PLAYER))) {
             throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
         }
         this.building = null;
