@@ -3,7 +3,7 @@ Second version wil have the following features:
 
 ~~BP-011: starting areas are random and the rest is filled with lairs.~~
 
-BP-012: add teams underwater which differentiates the player and monster teams.
+~~BP-012: add teams underwater which differentiates the player and monster teams.~~
 
 BP-013: Player can build villages on destroyed lairs.
  - Defeat is now when all villages are destroyed.
