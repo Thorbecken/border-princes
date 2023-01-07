@@ -1,6 +1,9 @@
 package eu.borderprinces;
 
-import eu.borderprinces.entities.*;
+import eu.borderprinces.entities.Building;
+import eu.borderprinces.entities.Game;
+import eu.borderprinces.entities.Tile;
+import eu.borderprinces.entities.Unit;
 import eu.borderprinces.map.Map;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
@@ -41,6 +44,14 @@ public class BorderPrinces {
                     currentTile.destroyBuilding(game);
                 }
             }
+            case BUILD_VILLAGE -> {
+                Tile currentTile = game.player.getTile();
+                if (currentTile.getBuilding() == null &&
+                        BARE_GROUND.equals(currentTile.getTerrain().getIcon())) {
+                    currentTile.createVillage(VILLAGE);
+                    game.buildings.add(currentTile.getBuilding());
+                }
+            }
             case NEW_GAME -> {
                 System.out.println("select one of the following scenarios");
                 ScenarioMaps.scenarios.keySet().forEach(System.out::println);
@@ -54,13 +65,12 @@ public class BorderPrinces {
     }
 
     private static String checkInput(String input, Game game, Scanner sc) {
-        if (!game.player.isAvailableAction(input)) {
+        if (ConsoleActions.options(game.player.getTile()).stream()
+                .noneMatch(options -> options.equals(input))) {
             System.out.println("select one of the following inputs");
-            game.player.getActions().stream()
-                    .map(ConsoleActions::getAction)
+            ConsoleActions.options(game.player.getTile())
                     .forEach(System.out::println);
-            input = sc.nextLine();
-            return checkInput(input, game, sc);
+            return checkInput(sc.nextLine(), game, sc);
         } else {
             return input;
         }
@@ -81,22 +91,13 @@ public class BorderPrinces {
     }
 
     private static void moveUnits(Game game) {
-        game.units.stream()
-                .filter(m -> m instanceof Monster)
-                .map(u -> ((Monster) u))
-                .forEach(Monster::move);
+        game.units.forEach(Unit::takeAction);
         game.units = game.units.stream()
                 .filter(unit -> unit.getHealth() > 0)
                 .collect(Collectors.toList());
     }
 
     private static void buildingChecks(Game game) {
-        game.buildings.stream()
-                .filter(b -> b instanceof Lair)
-                .map(Building::getTile)
-                .filter(t -> t.getUnit() == null)
-                .map(Tile::getBuilding)
-                .map(b -> ((Lair) b))
-                .forEach(lair -> lair.takeTurn(game));
+        game.buildings.forEach(building -> building.takeTurn(game));
     }
 }

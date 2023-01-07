@@ -1,7 +1,6 @@
 package eu.borderprinces.map;
 
-import eu.borderprinces.ConsoleActions;
-import eu.borderprinces.entities.Player;
+import eu.borderprinces.entities.unit.Player;
 import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,16 +21,16 @@ public class Menu {
         putMenuString(menuMap, 3, "|                    ");
     }
 
-    private static String menuOption(String quit) {
-        Assert.assertTrue(quit.length() <= 17);
-        return StringUtils.rightPad(quit, 17);
+    private static String paddedMenuOption(String action) {
+        Assert.assertTrue(action.length() <= 17);
+        return StringUtils.rightPad(action, 17);
     }
 
-    public static String menuOption(ConsoleActions consoleActions) {
-        return "| - " + menuOption(consoleActions.action);
+    public static String menuOption(String action) {
+        return "| - " + paddedMenuOption(action);
     }
 
     public static String healthBar(Player player) {
-        return "| - " + menuOption("*".repeat(Math.max(0, player.getHealth())));
+        return "| - " + paddedMenuOption("*".repeat(Math.max(0, player.getHealth())));
     }
 }

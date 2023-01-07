@@ -1,7 +1,7 @@
 package eu.borderprinces.map;
 
 import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.Player;
+import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.Tile;
 
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class ScenarioLoader {
 
     private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {
         playerStartingTiles.forEach(village -> {
-            village.createBuilding(VILLAGE);
+            village.createVillage(VILLAGE);
             game.buildings.add(village.getBuilding());
         });
     }

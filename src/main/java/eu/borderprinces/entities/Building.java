@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public class Building {
+public abstract class Building {
 
     private Long teamId;
     private final Tile tile;
@@ -16,6 +16,8 @@ public class Building {
         this.tile = tile;
         this.icon = icon;
     }
+
+    public abstract void takeTurn(Game game);
 
     @Override
     public String toString() {

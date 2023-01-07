@@ -1,7 +1,8 @@
 package eu.borderprinces.map;
 
+import eu.borderprinces.ConsoleActions;
 import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.Player;
+import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.Tile;
 
 import java.util.HashMap;
@@ -31,8 +32,8 @@ public class Map {
             stringBuilder.append(menuMap.get(rowNumber).values().stream().reduce((x, y) -> x + y).get());
         } else if (rowNumber == 3){
             stringBuilder.append(Menu.healthBar(player));
-        } else if (rowNumber < (player.getActions().size() + 3)) {
-            stringBuilder.append(Menu.menuOption(player.getActions().stream().toList().get(rowNumber -3)));
+        } else if (rowNumber < (ConsoleActions.options(player.getTile()).size() + 3)) {
+            stringBuilder.append(Menu.menuOption(ConsoleActions.options(player.getTile()).get(rowNumber -3)));
         } else {
             stringBuilder.append(menuMap.get(3).values().stream().reduce((x, y) -> x + y).get());
         }

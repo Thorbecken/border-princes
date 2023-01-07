@@ -1,32 +1,61 @@
 package eu.borderprinces;
 
+import eu.borderprinces.entities.Building;
+import eu.borderprinces.entities.Terrain;
+import eu.borderprinces.entities.Tile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import static eu.borderprinces.BorderPrincesConstants.BARE_GROUND;
+import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
 
 @Getter
 @AllArgsConstructor
 public enum ConsoleActions {
-    QUIT("quit"),
-    NEW_GAME("new game"),
-    LEFT("left"),
-    RIGHT("right"),
-    UP("up"),
-    DOWN("down"),
-    CLEAR_LAIR("clear lair"),
-    WAIT("wait");
+    QUIT("quit",
+            tile -> true),
+    NEW_GAME("new game",
+            tile -> true),
+    LEFT("left",
+            tile -> true),
+    RIGHT("right",
+            tile -> true),
+    UP("up",
+            tile -> true),
+    DOWN("down",
+            tile -> true),
+    CLEAR_LAIR("clear lair",
+            tile -> Optional.ofNullable(tile.getBuilding())
+                    .map(Building::getIcon)
+                    .filter(MONSTER_LAIR::equals)
+                    .isPresent()),
+    BUILD_VILLAGE("build village",
+            tile -> Optional.ofNullable(tile)
+                    .filter(t -> t.getBuilding() == null)
+                    .map(Tile::getTerrain)
+                    .map(Terrain::getIcon)
+                    .filter(BARE_GROUND::equals)
+                    .isPresent()),
+    WAIT("wait",
+            tile -> true);
     public final String action;
-    public static List<String> options(){
-        return Arrays.stream(ConsoleActions.values()).map(x -> x.action).toList();
-    }
-    public static boolean contains(String value){
-        return options().stream().anyMatch(x -> x.equals(value));
+
+    public final Predicate<Tile> actionAvailable;
+
+    public static List<String> options(Tile tile) {
+        return Arrays.stream(ConsoleActions.values())
+                .filter(consoleActions -> consoleActions.actionAvailable.test(tile))
+                .map(x -> x.action)
+                .toList();
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static ConsoleActions get(String value){
+    public static ConsoleActions get(String value) {
         return Arrays.stream(ConsoleActions.values()).filter(x -> x.action.equals(value)).findFirst().get();
     }
 }

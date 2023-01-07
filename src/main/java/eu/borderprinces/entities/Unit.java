@@ -1,33 +1,25 @@
 package eu.borderprinces.entities;
 
-import eu.borderprinces.ConsoleActions;
+import eu.borderprinces.entities.unit.Player;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.EnumSet;
 import java.util.Optional;
 
-import static eu.borderprinces.BorderPrincesConstants.MONSTER;
-import static eu.borderprinces.BorderPrincesConstants.PLAYER;
-
 @Data
-public class Unit {
+public abstract class Unit {
 
     private long teamId;
+    private int maxHealth;
     private int health;
 
     private Tile tile;
     private final String icon;
 
-    public Unit(long teamId, @NonNull Tile tile, @NonNull String icon) {
+    public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth) {
         this.teamId = teamId;
-        if(MONSTER.equals(icon)){
-            this.health = 1;
-        } else if (PLAYER.equals(icon)){
-            this.health = 10;
-        } else {
-            throw new RuntimeException();
-        }
+        this.health = maxHealth;
+        this.maxHealth = maxHealth;
         this.tile = tile;
         this.icon = icon;
         tile.setUnit(this);
@@ -42,8 +34,8 @@ public class Unit {
                 .ifPresent(this::move);
     }
 
-    public void move(@NonNull Tile tile) {
-        if(tile != this.tile) {
+    public void move(Tile tile) {
+        if(tile != null && tile != this.tile) {
             if (tile.getUnit() == null) {
                 this.tile.setUnit(null);
                 tile.setUnit(this);
@@ -69,20 +61,13 @@ public class Unit {
         if (this instanceof Player){
             throw new RuntimeException("You lose '_' ");
         } else {
+            this.health = 0;
             this.tile.setUnit(null);
             this.tile = null;
         }
     }
 
-    public EnumSet<ConsoleActions> getActions() {
-        return EnumSet.of(ConsoleActions.QUIT,
-                ConsoleActions.NEW_GAME,
-                ConsoleActions.UP,
-                ConsoleActions.DOWN,
-                ConsoleActions.RIGHT,
-                ConsoleActions.LEFT,
-                ConsoleActions.CLEAR_LAIR);
-    }
+    public abstract void takeAction();
 
     @Override
     public String toString() {

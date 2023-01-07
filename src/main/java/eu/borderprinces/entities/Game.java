@@ -1,5 +1,7 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.unit.Player;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

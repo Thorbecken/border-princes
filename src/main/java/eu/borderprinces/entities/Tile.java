@@ -1,11 +1,12 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.building.Lair;
+import eu.borderprinces.entities.building.Village;
 import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
-import static eu.borderprinces.BorderPrincesConstants.TEAM_MONSTERS;
-import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
+import static eu.borderprinces.BorderPrincesConstants.*;
 
 public class Tile {
 
@@ -37,13 +38,17 @@ public class Tile {
         }
     }
 
-    public void createBuilding(String building) {
-        this.building = new Building(TEAM_PLAYER,this, building);
-        setBuilding(this.building);
+    public Terrain getTerrain(){
+        return terrain;
     }
 
     public void createLair(String building) {
-        this.building = new Lair(TEAM_MONSTERS, this, building);
+        this.building = new Lair(TEAM_MONSTERS, this, building, MONSTER);
+        setBuilding(this.building);
+    }
+
+    public void createVillage(String building) {
+        this.building = new Village(TEAM_PLAYER, this, building);
         setBuilding(this.building);
     }
 

@@ -5,9 +5,8 @@ Second version wil have the following features:
 
 ~~BP-012: add teams underwater which differentiates the player and monster teams.~~
 
-BP-013: Player can build villages on destroyed lairs.
- - Defeat is now when all villages are destroyed.
- - Village heals player.
+~~BP-013: Player can build villages on destroyed lairs.~~
+ ~~- Village heals player.~~
 
 BP-014: Monsters build lairs on destroyed villages.
 
