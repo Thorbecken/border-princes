@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-public abstract class Building {
+public abstract class Building implements Target {
 
     private Long teamId;
     private final Tile tile;

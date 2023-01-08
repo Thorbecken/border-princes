@@ -90,11 +90,17 @@ public class BorderPrinces {
         }
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     private static void moveUnits(Game game) {
         game.units.forEach(Unit::takeAction);
         game.units = game.units.stream()
                 .filter(unit -> unit.getHealth() > 0)
                 .collect(Collectors.toList());
+        game.units.forEach(unit -> {
+            if(!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())){
+                unit.setCurrentTarget(null);
+            }
+        });
     }
 
     private static void buildingChecks(Game game) {

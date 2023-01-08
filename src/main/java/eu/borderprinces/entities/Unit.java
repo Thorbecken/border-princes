@@ -7,13 +7,14 @@ import lombok.NonNull;
 import java.util.Optional;
 
 @Data
-public abstract class Unit {
+public abstract class Unit implements Target {
 
     private long teamId;
     private int maxHealth;
     private int health;
 
     private Tile tile;
+    protected Target currentTarget;
     private final String icon;
 
     public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth) {

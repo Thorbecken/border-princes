@@ -10,7 +10,7 @@ Second version wil have the following features:
 
 ~~BP-014: Monsters build lairs on destroyed villages.~~
 
-BP-015: Monster wil now lock onto a target.
+~~BP-015: Monster wil now lock onto a target.~~
 
 BP-016: Game should allow multiple units on the same tile.
 
