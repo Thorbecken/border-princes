@@ -8,7 +8,7 @@ Second version wil have the following features:
 ~~BP-013: Player can build villages on destroyed lairs.~~
  ~~- Village heals player.~~
 
-BP-014: Monsters build lairs on destroyed villages.
+~~BP-014: Monsters build lairs on destroyed villages.~~
 
 BP-015: Monster wil now lock onto a target.
 

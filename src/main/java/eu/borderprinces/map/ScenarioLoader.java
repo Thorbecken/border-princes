@@ -48,7 +48,7 @@ public class ScenarioLoader {
 
     private static void generateLairs(List<Tile> monsterStartingTiles, Game game) {
         monsterStartingTiles.forEach(lair -> {
-            lair.createLair(MONSTER_LAIR);
+            lair.createLair(MONSTER_LAIR, TEAM_MONSTERS);
             game.buildings.add(lair.getBuilding());
         });
     }

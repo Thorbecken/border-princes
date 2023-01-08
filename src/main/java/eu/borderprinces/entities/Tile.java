@@ -42,8 +42,8 @@ public class Tile {
         return terrain;
     }
 
-    public void createLair(String building) {
-        this.building = new Lair(TEAM_MONSTERS, this, building, MONSTER);
+    public void createLair(String building, long teamId) {
+        this.building = new Lair(teamId, this, building, MONSTER);
         setBuilding(this.building);
     }
 
