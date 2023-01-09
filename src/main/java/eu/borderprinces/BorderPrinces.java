@@ -58,8 +58,7 @@ public class BorderPrinces {
                 input = sc.nextLine();
                 return ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
             }
-            default -> {
-            }
+            default -> {}
         }
         return game;
     }

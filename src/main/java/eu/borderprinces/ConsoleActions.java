@@ -42,6 +42,8 @@ public enum ConsoleActions {
                     .filter(BARE_GROUND::equals)
                     .isPresent()),
     WAIT("wait",
+            tile -> true),
+    EMPTY("",
             tile -> true);
     public final String action;
 

@@ -12,6 +12,8 @@ Second version wil have the following features:
 
 ~~BP-015: Monster wil now lock onto a target.~~
 
+~~BP-022: Make game skip turn if no order was put into the commandline~~
+
 BP-016: Game should allow multiple units on the same tile.
 
 BP-017: Player can raise militia.
@@ -24,13 +26,16 @@ BP-018: Add 'Search and destroy' unit logic
  - 'Search and destroy' should use reverse monster logic, locating lairs en destroying them.
 
 BP-019: Add 'Patrol' unit logic
-- 'Patrol' should search out for monsters.
+- 'Patrol' should search out for monsters near a location.
 
 BP-020: allow command to change order of units
  - create submenu for all units containing id, coordinate and current order.
- - allow change order on basis of id
+ - allow changing orders on the basis of an id
 
 BP-021: Make monsters use unit logic.
+ - first monster should defend
+ - second monster should patrol
+ - third+ monster should search and destroy
 
 # Wishlist
 
