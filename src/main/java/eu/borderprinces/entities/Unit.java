@@ -12,7 +12,6 @@ public abstract class Unit implements Target {
     private long teamId;
     private int maxHealth;
     private int health;
-
     private Tile tile;
     protected Target currentTarget;
     private final String icon;
@@ -23,7 +22,7 @@ public abstract class Unit implements Target {
         this.maxHealth = maxHealth;
         this.tile = tile;
         this.icon = icon;
-        tile.setUnit(this);
+        tile.addUnit(this);
     }
 
     public void move(Game game, int row, int colum) {
@@ -37,12 +36,12 @@ public abstract class Unit implements Target {
 
     public void move(Tile tile) {
         if(tile != null && tile != this.tile) {
-            if (tile.getUnit() == null) {
-                this.tile.setUnit(null);
-                tile.setUnit(this);
+            if (tile.openOrFriendly(this.teamId)) {
+                this.tile.removeUnit(this);
+                tile.addUnit(this);
                 this.tile = tile;
             } else {
-                tile.getUnit().combat(this);
+                tile.getUnits().get(0).combat(this);
             }
         }
     }
@@ -63,7 +62,7 @@ public abstract class Unit implements Target {
             throw new RuntimeException("You lose '_' ");
         } else {
             this.health = 0;
-            this.tile.setUnit(null);
+            this.tile.removeUnit(this);
             this.tile = null;
         }
     }

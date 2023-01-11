@@ -14,7 +14,7 @@ Second version wil have the following features:
 
 ~~BP-022: Make game skip turn if no order was put into the commandline~~
 
-BP-016: Game should allow multiple units on the same tile.
+~~BP-016: Game should allow multiple units on the same tile.~~
 
 BP-017: Player can raise militia.
  - Cap of one per village.

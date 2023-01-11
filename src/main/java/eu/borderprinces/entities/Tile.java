@@ -6,6 +6,9 @@ import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static eu.borderprinces.BorderPrincesConstants.*;
 
 public class Tile {
@@ -16,15 +19,24 @@ public class Tile {
     @Getter
     @NonNull
     private final Integer column;
+
+    public boolean openOrFriendly(Long teamId) {
+        return this.controlingTeam == null || teamId.equals(this.controlingTeam);
+    }
+
+    private Long controlingTeam;
     private String currentIcon;
     private Terrain terrain;
     private Building building;
-    private Unit unit;
+    private final List<Unit> units;
 
     public Tile(String terrain, int row, int column) {
-        setTerrain(terrain);
         this.row = row;
         this.column = column;
+        this.units = new ArrayList<>();
+        this.controlingTeam = null;
+
+        setTerrain(terrain);
     }
 
     private void setCurrentIcon(String currentIcon) {
@@ -33,12 +45,12 @@ public class Tile {
 
     private void setTerrain(String terrain) {
         this.terrain = new Terrain(row, column, terrain);
-        if (this.building == null && this.unit == null) {
+        if (this.building == null && this.units.isEmpty()) {
             setCurrentIcon(terrain);
         }
     }
 
-    public Terrain getTerrain(){
+    public Terrain getTerrain() {
         return terrain;
     }
 
@@ -53,33 +65,45 @@ public class Tile {
     }
 
     public void setBuilding(Building building) {
-        if (this.unit != null) {
-            setCurrentIcon(this.unit.getIcon());
-        } else if (this.building != null) {
+        if (building == null && !this.units.isEmpty()) {
+            setCurrentIcon(this.units.get(0).getIcon());
+        } else if (building != null) {
             setCurrentIcon(building.getIcon());
         } else {
             setCurrentIcon(this.terrain.getIcon());
         }
     }
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public void addUnit(Unit unit) {
+        if (this.units.isEmpty()) {
+            this.controlingTeam = unit.getTeamId();
+        } else if (!this.controlingTeam.equals(unit.getTeamId())) {
+            throw new RuntimeException("Tile is owned by another team");
+        }
 
-        if (unit != null) {
-            setCurrentIcon(unit.getIcon());
-        } else if (this.building != null) {
+        this.units.add(unit);
+        setCurrentIcon(unit.getIcon());
+    }
+
+    public void removeUnit(Unit unit) {
+        this.units.remove(unit);
+        if(units.isEmpty()){
+            this.controlingTeam = null;
+        }
+
+        if (this.building != null) {
             setCurrentIcon(this.building.getIcon());
         } else {
             setCurrentIcon(this.terrain.getIcon());
         }
     }
 
-    public Building getBuilding() {
-        return building;
+    public boolean noUnits() {
+        return units.isEmpty();
     }
 
-    public Unit getUnit() {
-        return unit;
+    public Building getBuilding() {
+        return building;
     }
 
     public void destroyBuilding(Game game) {
@@ -109,7 +133,11 @@ public class Tile {
                 ", currentIcon='" + currentIcon + '\'' +
                 ", terrain=" + terrain +
                 ", building=" + building +
-                ", unit=" + unit +
+                ", units=" + units +
                 '}';
+    }
+
+    public List<Unit> getUnits() {
+        return new ArrayList<>(units);
     }
 }

@@ -5,8 +5,6 @@ import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import lombok.NonNull;
 
-import java.util.Optional;
-
 public class Village extends Building {
 
     public Village(long teamId, @NonNull Tile tile, @NonNull String building) {
@@ -15,9 +13,9 @@ public class Village extends Building {
 
     @Override
     public void takeTurn(Game game) {
-        Optional.ofNullable(this.getTile().getUnit())
+        this.getTile().getUnits().stream()
                 .filter(unit -> this.getTeamId().equals(unit.getTeamId()))
-                .ifPresent(unit -> unit.setHealth(unit.getMaxHealth()));
+                .forEach(unit -> unit.setHealth(unit.getMaxHealth()));
     }
 
 }
