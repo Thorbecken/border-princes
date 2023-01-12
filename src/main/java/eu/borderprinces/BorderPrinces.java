@@ -4,6 +4,9 @@ import eu.borderprinces.entities.Building;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import eu.borderprinces.entities.Unit;
+import eu.borderprinces.entities.unit.Player;
+import eu.borderprinces.entities.unit.Soldier;
+import eu.borderprinces.entities.unit.UnitLogic;
 import eu.borderprinces.map.Map;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
@@ -52,15 +55,37 @@ public class BorderPrinces {
                     game.buildings.add(currentTile.getBuilding());
                 }
             }
+            case RECRUIT -> recruitOption(game);
             case NEW_GAME -> {
                 System.out.println("select one of the following scenarios");
                 ScenarioMaps.scenarios.keySet().forEach(System.out::println);
                 input = sc.nextLine();
                 return ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
             }
-            default -> {}
+            default -> {
+            }
         }
         return game;
+    }
+
+    private static void recruitOption(Game game) {
+        Player player = game.player;
+        long currentUnits = game.units.stream()
+                .filter(unit -> player.getTeamId() == unit.getTeamId())
+                .count();
+        // player doesn't count
+        currentUnits--;
+        long currentBuildings = game.buildings.stream()
+                .filter(building -> player.getTeamId() == building.getTeamId())
+                .count();
+        System.out.println("current unit count: " + currentUnits);
+        System.out.println("current village count: " + currentBuildings);
+        if (currentUnits < currentBuildings) {
+            Tile recruitmentTile = player.getTile();
+            new Soldier(player.getTeamId(), recruitmentTile, player.getIcon(), game, UnitLogic.DEFEND);
+        } else {
+            System.out.println("your kingdom can't support more units on the field");
+        }
     }
 
     private static String checkInput(String input, Game game, Scanner sc) {
@@ -96,7 +121,7 @@ public class BorderPrinces {
                 .filter(unit -> unit.getHealth() > 0)
                 .collect(Collectors.toList());
         game.units.forEach(unit -> {
-            if(!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())){
+            if (!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())) {
                 unit.setCurrentTarget(null);
             }
         });

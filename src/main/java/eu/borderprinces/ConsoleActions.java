@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static eu.borderprinces.BorderPrincesConstants.BARE_GROUND;
-import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
+import static eu.borderprinces.BorderPrincesConstants.*;
 
 @Getter
 @AllArgsConstructor
@@ -40,6 +39,11 @@ public enum ConsoleActions {
                     .map(Tile::getTerrain)
                     .map(Terrain::getIcon)
                     .filter(BARE_GROUND::equals)
+                    .isPresent()),
+    RECRUIT("recruit",
+            tile -> Optional.ofNullable(tile)
+                    .map(Tile::getBuilding)
+                    .filter(building -> VILLAGE.equals(building.getIcon()))
                     .isPresent()),
     WAIT("wait",
             tile -> true),

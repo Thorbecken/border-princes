@@ -16,9 +16,9 @@ Second version wil have the following features:
 
 ~~BP-016: Game should allow multiple units on the same tile.~~
 
-BP-017: Player can raise militia.
- - Cap of one per village.
+BP-017: Player can raise soldiers.
  - Creation command can only be done on villages.
+ - Cap of one per village.
  - Default logic to 'Defend' unit logic. 'Defend' should make the militia stand still on the village.
 
 BP-018: Add 'Search and destroy' unit logic
