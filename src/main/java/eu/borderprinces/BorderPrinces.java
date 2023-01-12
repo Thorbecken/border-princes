@@ -11,6 +11,7 @@ import eu.borderprinces.map.Map;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
 
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class BorderPrinces {
                     game.buildings.add(currentTile.getBuilding());
                 }
             }
-            case RECRUIT -> recruitOption(game);
+            case RECRUIT -> recruitOption(game, sc);
             case NEW_GAME -> {
                 System.out.println("select one of the following scenarios");
                 ScenarioMaps.scenarios.keySet().forEach(System.out::println);
@@ -68,7 +69,7 @@ public class BorderPrinces {
         return game;
     }
 
-    private static void recruitOption(Game game) {
+    private static void recruitOption(Game game, Scanner sc) {
         Player player = game.player;
         long currentUnits = game.units.stream()
                 .filter(unit -> player.getTeamId() == unit.getTeamId())
@@ -82,7 +83,13 @@ public class BorderPrinces {
         System.out.println("current village count: " + currentBuildings);
         if (currentUnits < currentBuildings) {
             Tile recruitmentTile = player.getTile();
-            new Soldier(player.getTeamId(), recruitmentTile, player.getIcon(), game, UnitLogic.DEFEND);
+            UnitLogic unitLogic = null;
+            while(unitLogic == null){
+                Arrays.stream(UnitLogic.values()).forEach( ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
+                System.out.println("current unit count: " + currentUnits);
+                unitLogic = UnitLogic.get(sc.nextLine());
+            }
+            new Soldier(player.getTeamId(), recruitmentTile, player.getIcon(), game, unitLogic);
         } else {
             System.out.println("your kingdom can't support more units on the field");
         }

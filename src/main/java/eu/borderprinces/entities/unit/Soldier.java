@@ -29,7 +29,7 @@ public class Soldier extends Unit {
         // units can be killed in another units action
         if (getHealth() > 0) {
             switch (this.unitLogic) {
-                case KILL_AND_DESTROY -> this.killAndDestroy();
+                case SEARCH_AND_DESTROY -> this.killAndDestroy();
                 case PATROL, DEFEND -> {}
             }
         }

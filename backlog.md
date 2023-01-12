@@ -21,9 +21,9 @@ Second version wil have the following features:
  - Cap of one per village.
  - Default logic to 'Defend' unit logic. 'Defend' should make the militia stand still on the village.~~
 
-BP-018: Add 'Search and destroy' unit logic
+~~BP-018: Add 'Search and destroy' unit logic
  - On creation can designate order.
- - 'Search and destroy' should use reverse monster logic, locating lairs en destroying them.
+ - 'Search and destroy' should use reverse monster logic, locating lairs en destroying them.~~
 
 BP-019: Add 'Patrol' unit logic
 - 'Patrol' should search out for monsters near a location.
