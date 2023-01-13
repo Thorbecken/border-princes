@@ -1,9 +1,6 @@
 package eu.borderprinces.entities.unit;
 
-import eu.borderprinces.entities.Building;
-import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.Tile;
-import eu.borderprinces.entities.Unit;
+import eu.borderprinces.entities.*;
 import lombok.NonNull;
 
 import java.util.Comparator;
@@ -15,11 +12,14 @@ public class Soldier extends Unit {
 
     Game game;
     UnitLogic unitLogic;
+    Target protectionTarget;
+    Long patrolRange = 5L;
 
     public Soldier(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game, UnitLogic unitLogic) {
         super(teamid, tile, icon, 1);
         this.game = game;
         this.unitLogic = unitLogic;
+        this.protectionTarget = tile.getBuilding();
         game.units.add(this);
     }
 
@@ -29,9 +29,18 @@ public class Soldier extends Unit {
         // units can be killed in another units action
         if (getHealth() > 0) {
             switch (this.unitLogic) {
+                case DEFEND -> this.defend();
+                case PATROL -> this.patrol();
                 case SEARCH_AND_DESTROY -> this.killAndDestroy();
-                case PATROL, DEFEND -> {}
             }
+        }
+    }
+
+    private void defend() {
+        if(!this.getTile().equals(protectionTarget.getTile())){
+            moveRandomToTarget();
+        } else {
+            this.currentTarget = protectionTarget;
         }
     }
 
@@ -47,8 +56,19 @@ public class Soldier extends Unit {
         }
     }
 
-    private void moveRandomToTarget() {
+    private void patrol() {
+        Tile defendTile = this.protectionTarget.getTile();
+        this.currentTarget = this.protectionTarget;
+        game.units.stream()
+                .filter(otherUnit -> otherUnit.getTeamId() != this.getTeamId())
+                .map(Unit::getTile)
+                .filter(tile -> tile.getDistance(tile, defendTile) < patrolRange)
+                .findFirst()
+                .ifPresent(tile -> this.currentTarget = tile.getUnits().get(0));
+        moveRandomToTarget();
+    }
 
+    private void moveRandomToTarget() {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
         if (direction > 1) {

@@ -25,8 +25,8 @@ Second version wil have the following features:
  - On creation can designate order.
  - 'Search and destroy' should use reverse monster logic, locating lairs en destroying them.~~
 
-BP-019: Add 'Patrol' unit logic
-- 'Patrol' should search out for monsters near a location.
+~~BP-019: Add 'Patrol' unit logic
+- 'Patrol' should search out for monsters near a location.~~
 
 BP-020: allow command to change order of units
  - create submenu for all units containing id, coordinate and current order.
