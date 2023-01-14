@@ -32,10 +32,10 @@ Second version wil have the following features:
  - create submenu for all units containing id, coordinate and current order.
  - allow changing orders on the basis of an id~~
 
-BP-021: Make monsters use unit logic.
+~~BP-021: Make monsters use unit logic.
  - first monster should defend
  - second monster should patrol
- - third+ monster should search and destroy
+ - third+ monster should search and destroy~~
 
 # Wishlist
 

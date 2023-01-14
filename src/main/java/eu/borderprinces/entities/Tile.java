@@ -9,7 +9,8 @@ import lombok.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static eu.borderprinces.BorderPrincesConstants.*;
+import static eu.borderprinces.BorderPrincesConstants.MONSTER;
+import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
 
 public class Tile {
 
@@ -87,19 +88,16 @@ public class Tile {
 
     public void removeUnit(Unit unit) {
         this.units.remove(unit);
-        if(units.isEmpty()){
+        if (units.isEmpty()) {
             this.controlingTeam = null;
-        }
-
-        if (this.building != null) {
-            setCurrentIcon(this.building.getIcon());
+            if (this.building != null) {
+                setCurrentIcon(this.building.getIcon());
+            } else {
+                setCurrentIcon(this.terrain.getIcon());
+            }
         } else {
-            setCurrentIcon(this.terrain.getIcon());
+            setCurrentIcon(this.units.get(0).getIcon());
         }
-    }
-
-    public boolean noUnits() {
-        return units.isEmpty();
     }
 
     public Building getBuilding() {
@@ -119,9 +117,9 @@ public class Tile {
         return currentIcon;
     }
 
-    public int getDistance(Tile targetTile, Tile currentTile) {
-        int rd = targetTile.getRow() - currentTile.getRow();
-        int cd = targetTile.getColumn() - currentTile.getColumn();
+    public int getDistance(Tile targetTile) {
+        int rd = Math.abs(targetTile.getRow() - this.getRow());
+        int cd = Math.abs(targetTile.getColumn() - this.getColumn());
         return rd + cd;
     }
 
