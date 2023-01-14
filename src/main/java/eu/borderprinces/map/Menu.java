@@ -1,6 +1,7 @@
 package eu.borderprinces.map;
 
 import eu.borderprinces.entities.unit.Player;
+import eu.borderprinces.entities.unit.Soldier;
 import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,16 +22,44 @@ public class Menu {
         putMenuString(menuMap, 3, "|                    ");
     }
 
-    private static String paddedMenuOption(String action) {
-        Assert.assertTrue(action.length() <= 17);
-        return StringUtils.rightPad(action, 17);
+    private static String paddedMenuOption(String action, int padding) {
+        Assert.assertTrue(action.length() <= padding);
+        return StringUtils.rightPad(action, padding);
     }
 
     public static String menuOption(String action) {
-        return "| - " + paddedMenuOption(action);
+        return "| - " + paddedMenuOption(action,17);
     }
 
     public static String healthBar(Player player) {
-        return "| - " + paddedMenuOption("*".repeat(Math.max(0, player.getHealth())));
+        return "| - " + paddedMenuOption("*".repeat(Math.max(0, player.getHealth())),17);
+    }
+
+    public static String unitBarStart(){
+        String returnValue ="________________________________________________\r\n";
+        returnValue += "| id  ";
+        returnValue += "| row ";
+        returnValue += "| column ";
+        returnValue += "| current command         ";
+        returnValue += "|";
+
+        return returnValue;
+    }
+
+    public static String unitBarEnd(){
+        String returnValue ="------------------------------------------------\r\n";
+        returnValue += "please enter id of unit to command";
+
+        return returnValue;
+    }
+
+    public static String unitView(Soldier unit) {
+        String returnValue = "| " + paddedMenuOption(String.valueOf(unit.getId()),4);
+        returnValue += "| " + paddedMenuOption(String.valueOf(unit.getTile().getRow()),4);
+        returnValue += "| " + paddedMenuOption(String.valueOf(unit.getTile().getColumn()),7);
+        returnValue += "| " + paddedMenuOption(String.valueOf(unit.getUnitLogic().getName()),24);
+        returnValue += "|";
+
+        return returnValue;
     }
 }

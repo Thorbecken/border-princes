@@ -1,13 +1,18 @@
 package eu.borderprinces.entities.unit;
 
 import eu.borderprinces.entities.*;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.Comparator;
 import java.util.Random;
 
-import static eu.borderprinces.BorderPrincesConstants.*;
+import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
+import static eu.borderprinces.entities.unit.UnitLogic.DEFEND;
 
+@Getter
+@Setter
 public class Soldier extends Unit {
 
     Game game;
@@ -21,6 +26,14 @@ public class Soldier extends Unit {
         this.unitLogic = unitLogic;
         this.protectionTarget = tile.getBuilding();
         game.units.add(this);
+    }
+
+    public void setUnitLogic(UnitLogic unitLogic) {
+        this.unitLogic = unitLogic;
+        this.currentTarget = null;
+        if(DEFEND.equals(unitLogic)){
+            this.currentTarget = protectionTarget;
+        }
     }
 
     @Override

@@ -8,10 +8,13 @@ import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.unit.Soldier;
 import eu.borderprinces.entities.unit.UnitLogic;
 import eu.borderprinces.map.Map;
+import eu.borderprinces.map.Menu;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -57,6 +60,7 @@ public class BorderPrinces {
                 }
             }
             case RECRUIT -> recruitOption(game, sc);
+            case COMMAND -> commandOption(game, sc);
             case NEW_GAME -> {
                 System.out.println("select one of the following scenarios");
                 ScenarioMaps.scenarios.keySet().forEach(System.out::println);
@@ -92,6 +96,38 @@ public class BorderPrinces {
             new Soldier(player.getTeamId(), recruitmentTile, player.getIcon(), game, unitLogic);
         } else {
             System.out.println("your kingdom can't support more units on the field");
+        }
+    }
+
+    private static void commandOption(Game game, Scanner sc) {
+        Player player = game.player;
+        List<Soldier> units = game.units.stream()
+                .filter(unit -> unit instanceof Soldier)
+                .map(unit -> ((Soldier) unit))
+                .filter(unit -> player.getTeamId() == unit.getTeamId())
+                .filter(unit -> unit.getId() != player.getId())
+                .sorted(Comparator.comparingLong(Unit::getId))
+                .toList();
+
+        System.out.println(Menu.unitBarStart());
+        units.forEach(unit -> System.out.println(Menu.unitView(unit)));
+        System.out.println(Menu.unitBarEnd());
+        Long id = null;
+        try {
+            id = Long.parseLong(sc.nextLine());
+        } catch(NumberFormatException ignored){}
+        if (id != null){
+            final long finalId = id;
+            UnitLogic unitLogic = null;
+            while(unitLogic == null){
+                Arrays.stream(UnitLogic.values()).forEach( ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
+                unitLogic = UnitLogic.get(sc.nextLine());
+            }
+            final UnitLogic finalUnitLogic = unitLogic;
+            units.stream()
+                    .filter(unit -> finalId == unit.getId())
+                    .findFirst()
+                    .ifPresent(unit -> unit.setUnitLogic(finalUnitLogic));
         }
     }
 

@@ -28,9 +28,9 @@ Second version wil have the following features:
 ~~BP-019: Add 'Patrol' unit logic
 - 'Patrol' should search out for monsters near a location.~~
 
-BP-020: allow command to change order of units
+~~BP-020: allow command to change order of units
  - create submenu for all units containing id, coordinate and current order.
- - allow changing orders on the basis of an id
+ - allow changing orders on the basis of an id~~
 
 BP-021: Make monsters use unit logic.
  - first monster should defend

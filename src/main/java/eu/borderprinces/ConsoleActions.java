@@ -45,6 +45,8 @@ public enum ConsoleActions {
                     .map(Tile::getBuilding)
                     .filter(building -> VILLAGE.equals(building.getIcon()))
                     .isPresent()),
+    COMMAND("command",
+            tile -> true),
     WAIT("wait",
             tile -> true),
     EMPTY("",

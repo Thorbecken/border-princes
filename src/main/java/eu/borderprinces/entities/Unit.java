@@ -9,6 +9,9 @@ import java.util.Optional;
 @Data
 public abstract class Unit implements Target {
 
+    static long nextId = 1L;
+
+    private long id;
     private long teamId;
     private int maxHealth;
     private int health;
@@ -17,6 +20,7 @@ public abstract class Unit implements Target {
     private final String icon;
 
     public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth) {
+        this.id = nextId++;
         this.teamId = teamId;
         this.health = maxHealth;
         this.maxHealth = maxHealth;
