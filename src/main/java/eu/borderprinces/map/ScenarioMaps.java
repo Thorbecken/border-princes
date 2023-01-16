@@ -55,9 +55,9 @@ public class ScenarioMaps {
         putString(riverMap, 23, "--------~~~-----************----");
         putString(riverMap, 24, "--**------~------**********-----");
         putString(riverMap, 25, "******----~~~~---********-------");
-        putString(riverMap, 26, "*******------~~~~~~~~**---------");
+        putString(riverMap, 26, "*******------~~=~~~~~**---------");
         putString(riverMap, 27, "********_--------***~~~~~~~-----");
-        putString(riverMap, 28, "*************---*****-----~~~~~~");
+        putString(riverMap, 28, "*************---*****-----~~~=~~");
         putString(riverMap, 29, "************************--------");
         putString(riverMap, 30, "***********************---------");
         putString(riverMap, 31, "*********************-----------");

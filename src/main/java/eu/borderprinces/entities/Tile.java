@@ -2,18 +2,23 @@ package eu.borderprinces.entities;
 
 import eu.borderprinces.entities.building.Lair;
 import eu.borderprinces.entities.building.Village;
+import eu.borderprinces.entities.pathfinding.GraphNode;
 import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static eu.borderprinces.BorderPrincesConstants.MONSTER;
-import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
+import static eu.borderprinces.BorderPrincesConstants.*;
 
-public class Tile {
+public class Tile implements GraphNode {
+    static long nextId = 1L;
 
+    @Getter
+    private final Long id;
     @Getter
     @NonNull
     private final Integer row;
@@ -32,6 +37,7 @@ public class Tile {
     private final List<Unit> units;
 
     public Tile(String terrain, int row, int column) {
+        this.id = nextId++;
         this.row = row;
         this.column = column;
         this.units = new ArrayList<>();
@@ -137,5 +143,18 @@ public class Tile {
 
     public List<Unit> getUnits() {
         return new ArrayList<>(units);
+    }
+
+    public Set<Long> getLandNeighbours(Game game) {
+        Set<Long> theNeighbours = new HashSet<>(4);
+        game.getTile(this.row+1, this.column).filter(tile -> !WATER.equals(tile.getTerrain().getIcon()))
+                .map(Tile::getId).ifPresent(theNeighbours::add);
+        game.getTile(this.row-1, this.column).filter(tile -> !WATER.equals(tile.getTerrain().getIcon()))
+                .map(Tile::getId).ifPresent(theNeighbours::add);
+        game.getTile(this.row, this.column+1).filter(tile -> !WATER.equals(tile.getTerrain().getIcon()))
+                .map(Tile::getId).ifPresent(theNeighbours::add);
+        game.getTile(this.row, this.column-1).filter(tile -> !WATER.equals(tile.getTerrain().getIcon()))
+                .map(Tile::getId).ifPresent(theNeighbours::add);
+        return theNeighbours;
     }
 }

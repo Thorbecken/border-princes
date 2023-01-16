@@ -1,12 +1,14 @@
 package eu.borderprinces.entities;
 
 import eu.borderprinces.BorderPrincesConstants;
+import eu.borderprinces.entities.pathfinding.Pathfinder;
 import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.unit.UnitLogic;
 import lombok.Data;
 import lombok.NonNull;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -28,6 +30,7 @@ public abstract class Unit implements Target {
     private UnitLogic unitLogic;
     private Target protectionTarget;
     private Long patrolRange = 5L;
+    private List<Tile> currentPath;
 
     public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth, @NonNull Game game, UnitLogic unitLogic) {
         this.id = nextId++;
@@ -39,6 +42,7 @@ public abstract class Unit implements Target {
         this.game = game;
         this.unitLogic = unitLogic;
         this.protectionTarget = tile.getBuilding();
+        this.currentPath = null;
         tile.addUnit(this);
         game.units.add(this);
     }
@@ -119,6 +123,7 @@ public abstract class Unit implements Target {
         if (this.getTile().getBuilding() != null
                 && MONSTER_LAIR.equals(this.getTile().getBuilding().getIcon())) {
             this.getTile().destroyBuilding(this.game);
+            this.currentTarget = null;
         } else {
             if (currentTarget == null) {
                 this.setCurrentTarget();
@@ -136,6 +141,8 @@ public abstract class Unit implements Target {
                 .filter(tile -> defendTile.getDistance(tile) < patrolRange)
                 .findFirst()
                 .ifPresent(tile -> this.currentTarget = tile.getUnits().get(0));
+        calculatePath();
+
         moveRandomToTarget();
     }
 
@@ -143,35 +150,22 @@ public abstract class Unit implements Target {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
         if (direction > 1) {
-            int rd = currentTarget.getTile().getRow() - this.getTile().getRow();
-            int cd = currentTarget.getTile().getColumn() - this.getTile().getColumn();
-            int r2 = rd * rd;
-            int c2 = cd * cd;
-            if (r2 > c2) {
-                this.move(
-                        this.game,
-                        rd > 0 ? 1 : -1,
-                        0
-                );
-            } else {
-                this.move(
-                        this.game,
-                        0,
-                        cd > 0 ? 1 : -1
-                );
-            }
+            Tile nextTile = currentPath.remove(0);
+            this.move(nextTile);
         } else if (direction == 1) {
             this.move(
                     this.game,
                     0,
                     rand.nextInt(-1, 2)
             );
+            this.calculatePath();
         } else if (direction == 0) {
             this.move(
                     this.game,
                     rand.nextInt(-1, 2),
                     0
             );
+            this.calculatePath();
         }
     }
 
@@ -182,6 +176,11 @@ public abstract class Unit implements Target {
                 .min(Comparator.comparingInt(x -> x.getDistance(this.getTile())))
                 .map(Tile::getBuilding)
                 .orElseThrow();
+        this.calculatePath();
+    }
+
+    private void calculatePath() {
+        this.currentPath = new Pathfinder(game).pathfind(this.tile, currentTarget.getTile());
     }
 
     @Override

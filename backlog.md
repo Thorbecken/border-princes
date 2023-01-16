@@ -1,7 +1,7 @@
 # Border princes
 Third version wil have the following features:
 ~~BP-022: implement impassable terrain~~
-BP-023: Implement pathfinding with A*
+~~BP-023: Implement pathfinding with A*~~
 BP-024: implement movement points per unit per action/turn.
 BP-025: implement terrain movement cost that makes hills more difficult to maneuver.  Units don't move while having negative action points.
 - default = 1 ap
