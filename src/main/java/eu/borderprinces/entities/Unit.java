@@ -1,5 +1,6 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.BorderPrincesConstants;
 import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.unit.UnitLogic;
 import lombok.Data;
@@ -60,7 +61,9 @@ public abstract class Unit implements Target {
     }
 
     public void move(Tile tile) {
-        if (tile != null && tile != this.tile) {
+        if (tile != null
+                && tile != this.tile
+                && !BorderPrincesConstants.WATER.equals(tile.getTerrain().getIcon())) {
             if (tile.openOrFriendly(this.teamId)) {
                 this.tile.removeUnit(this);
                 tile.addUnit(this);

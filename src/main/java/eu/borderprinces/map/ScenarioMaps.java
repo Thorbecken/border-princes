@@ -16,6 +16,7 @@ public class ScenarioMaps {
 
     // ^ = mountain
     // ~ = river
+    // = = bridge
     // - = plain
     // * = forest
     // _ = bare ground
@@ -38,14 +39,14 @@ public class ScenarioMaps {
         putString(riverMap, 7, "^^^^^^~~----------*****---------");
         putString(riverMap, 8, "^^^^^^^~~---------------------^^");
         putString(riverMap, 9, "^^^^^^^^~~-----------------^^^^^");
-        putString(riverMap, 10, "^^^^_-^^^~~~~~~------^^^^^^^^^^^");
+        putString(riverMap, 10, "^^^^_-^^^~~=~~~------^^^^^^^^^^^");
         putString(riverMap, 11, "^^^^^---------~~--------^^^^^^^^");
         putString(riverMap, 12, "**^^^^^^-------~~~-----------_^^");
         putString(riverMap, 13, "-****^^^^--------~~~*******-----");
         putString(riverMap, 14, "--***^^^-----------~~~*******---");
         putString(riverMap, 15, "---*^^^------**----**~~~********");
         putString(riverMap, 16, "---^^-------****----***~~*******");
-        putString(riverMap, 17, "------------****-----***~~~~~~~~");
+        putString(riverMap, 17, "------------****-----***~~~~=~~~");
         putString(riverMap, 18, "----------*******--*************");
         putString(riverMap, 19, "----------**********************");
         putString(riverMap, 20, "~~~---------********************");
@@ -78,9 +79,9 @@ public class ScenarioMaps {
         putString(coastalMap, 10, "~~-----*******^^***--------~~~~~");
         putString(coastalMap, 11, "~~--*************---------~~~~~-");
         putString(coastalMap, 12, "~~*******_------------~~~~~~~---");
-        putString(coastalMap, 13, "~~*********------~~~~~~~~~~-----");
-        putString(coastalMap, 14, "~~*********---~~~~~~~~~~~-------");
-        putString(coastalMap, 15, "~~~****---~~~~~~~~~~~~----------");
+        putString(coastalMap, 13, "~~*********------~~=~~~~~~~-----");
+        putString(coastalMap, 14, "~~*********---~~~~~=~~~~~-------");
+        putString(coastalMap, 15, "~~~****---~~~~~~~~~=~~----------");
         putString(coastalMap, 16, "~~~~~~~~~~~~~~~~----------------");
         putString(coastalMap, 17, "~~~~~~~~~~~~~~-----**********---");
         putString(coastalMap, 18, "~~~~~~~~~~~-------******_****---");
