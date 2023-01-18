@@ -1,6 +1,7 @@
 package eu.borderprinces.entities.building;
 
 import eu.borderprinces.entities.Building;
+import eu.borderprinces.entities.Color;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import lombok.NonNull;
@@ -8,7 +9,7 @@ import lombok.NonNull;
 public class Village extends Building {
 
     public Village(long teamId, @NonNull Tile tile, @NonNull String building) {
-        super(teamId, tile, building);
+        super(teamId, tile, building, Color.PURPLE);
     }
 
     @Override

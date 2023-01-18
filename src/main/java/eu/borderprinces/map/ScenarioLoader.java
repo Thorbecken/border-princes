@@ -18,7 +18,7 @@ public class ScenarioLoader {
         Game game = new Game(MapUtils.toScenario(scenario));
         List<Tile> bareGroundTiles = game.scenario.values().stream()
                 .flatMap(x -> x.values().stream())
-                .filter(x -> x.getIcon().equals(BARE_GROUND))
+                .filter(x -> x.getTerrain().getIcon().equals(BARE_GROUND))
                 .toList();
 
         List<Tile> playerStartingTiles = List.of(bareGroundTiles.get(random.nextInt(bareGroundTiles.size())));

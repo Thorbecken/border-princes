@@ -8,4 +8,6 @@ public class Terrain {
     private final Integer row;
     private final Integer column;
     private final String icon;
+
+    private final TerrainType terrainType;
 }

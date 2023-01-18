@@ -3,7 +3,6 @@ package eu.borderprinces.entities;
 import eu.borderprinces.entities.building.Lair;
 import eu.borderprinces.entities.building.Village;
 import eu.borderprinces.entities.pathfinding.GraphNode;
-import eu.borderprinces.map.MapColorUtils;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -46,15 +45,19 @@ public class Tile implements GraphNode {
         setTerrain(terrain);
     }
 
-    private void setCurrentIcon(String currentIcon) {
-        this.currentIcon = MapColorUtils.colored(currentIcon);
+    private void setCurrentIcon() {
+        if(!this.units.isEmpty()) {
+            this.currentIcon = units.get(0).getColored();
+        } else if (this.building != null){
+            this.currentIcon = this.building.getColored();
+        } else {
+            this.currentIcon = terrain.getTerrainType().getColored();
+        }
     }
 
     private void setTerrain(String terrain) {
-        this.terrain = new Terrain(row, column, terrain);
-        if (this.building == null && this.units.isEmpty()) {
-            setCurrentIcon(terrain);
-        }
+        this.terrain = new Terrain(row, column, terrain, TerrainType.getTerrainType(terrain));
+        setCurrentIcon();
     }
 
     public Terrain getTerrain() {
@@ -63,22 +66,12 @@ public class Tile implements GraphNode {
 
     public void createLair(String building, long teamId) {
         this.building = new Lair(teamId, this, building, MONSTER);
-        setBuilding(this.building);
+        setCurrentIcon();
     }
 
     public void createVillage(String building) {
         this.building = new Village(TEAM_PLAYER, this, building);
-        setBuilding(this.building);
-    }
-
-    public void setBuilding(Building building) {
-        if (building == null && !this.units.isEmpty()) {
-            setCurrentIcon(this.units.get(0).getIcon());
-        } else if (building != null) {
-            setCurrentIcon(building.getIcon());
-        } else {
-            setCurrentIcon(this.terrain.getIcon());
-        }
+        setCurrentIcon();
     }
 
     public void addUnit(Unit unit) {
@@ -89,21 +82,15 @@ public class Tile implements GraphNode {
         }
 
         this.units.add(unit);
-        setCurrentIcon(unit.getIcon());
+        setCurrentIcon();
     }
 
     public void removeUnit(Unit unit) {
         this.units.remove(unit);
         if (units.isEmpty()) {
             this.controlingTeam = null;
-            if (this.building != null) {
-                setCurrentIcon(this.building.getIcon());
-            } else {
-                setCurrentIcon(this.terrain.getIcon());
-            }
-        } else {
-            setCurrentIcon(this.units.get(0).getIcon());
         }
+        setCurrentIcon();
     }
 
     public Building getBuilding() {
@@ -116,7 +103,7 @@ public class Tile implements GraphNode {
             throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
         }
         this.building = null;
-        this.setBuilding(null);
+        setCurrentIcon();
     }
 
     public String getIcon() {
@@ -156,5 +143,9 @@ public class Tile implements GraphNode {
         game.getTile(this.row, this.column-1).filter(tile -> !WATER.equals(tile.getTerrain().getIcon()))
                 .map(Tile::getId).ifPresent(theNeighbours::add);
         return theNeighbours;
+    }
+
+    public double getTravelCost() {
+        return this.terrain.getTerrainType().getMovementCost();
     }
 }

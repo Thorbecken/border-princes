@@ -1,5 +1,6 @@
 package eu.borderprinces.entities.unit;
 
+import eu.borderprinces.entities.Color;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import eu.borderprinces.entities.Unit;
@@ -10,7 +11,7 @@ import static eu.borderprinces.BorderPrincesConstants.*;
 public class Monster extends Unit {
 
     public Monster(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game, @NonNull UnitLogic unitLogic) {
-        super(teamid, tile, icon, 1, game, unitLogic);
+        super(teamid, tile, icon, 1, game, unitLogic, Color.RED);
     }
 
     @Override

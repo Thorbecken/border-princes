@@ -1,9 +1,6 @@
 package eu.borderprinces.entities.building;
 
-import eu.borderprinces.entities.Building;
-import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.Tile;
-import eu.borderprinces.entities.Unit;
+import eu.borderprinces.entities.*;
 import eu.borderprinces.entities.unit.Monster;
 import lombok.NonNull;
 
@@ -20,7 +17,7 @@ public class Lair extends Building {
     private final List<Unit> spawnedUnits = new ArrayList<>();
 
     public Lair(long teamId, @NonNull Tile tile, @NonNull String building, @NonNull String monsterType) {
-        super(teamId, tile, building);
+        super(teamId, tile, building, Color.RED);
         this.monsterType = monsterType;
     }
 

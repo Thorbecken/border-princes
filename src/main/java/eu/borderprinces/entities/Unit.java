@@ -23,16 +23,18 @@ public abstract class Unit implements Target {
     private long teamId;
     private int maxHealth;
     private int health;
+    private int actionPoints;
     private Tile tile;
     protected Target currentTarget;
     private final String icon;
+    private final Color color;
     private final Game game;
     private UnitLogic unitLogic;
     private Target protectionTarget;
     private Long patrolRange = 5L;
     private List<Tile> currentPath;
 
-    public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth, @NonNull Game game, UnitLogic unitLogic) {
+    public Unit(long teamId, @NonNull Tile tile, @NonNull String icon, int maxHealth, @NonNull Game game, UnitLogic unitLogic, Color color) {
         this.id = nextId++;
         this.teamId = teamId;
         this.health = maxHealth;
@@ -43,6 +45,8 @@ public abstract class Unit implements Target {
         this.unitLogic = unitLogic;
         this.protectionTarget = tile.getBuilding();
         this.currentPath = null;
+        this.color = color;
+        this.actionPoints = 1;
         tile.addUnit(this);
         game.units.add(this);
     }
@@ -64,7 +68,7 @@ public abstract class Unit implements Target {
                 .ifPresent(this::move);
     }
 
-    public void move(Tile tile) {
+    protected void move(Tile tile) {
         if (tile != null
                 && tile != this.tile
                 && !BorderPrincesConstants.WATER.equals(tile.getTerrain().getIcon())) {
@@ -100,6 +104,7 @@ public abstract class Unit implements Target {
     }
 
     public void takeAction() {
+        actionPoints--;
         // dead units shouldn't move
         // units can be killed in another units action
         if (getHealth() > 0) {
@@ -189,5 +194,17 @@ public abstract class Unit implements Target {
                 "health=" + health +
                 ", icon='" + icon + '\'' +
                 '}';
+    }
+
+    public void addActionPoint() {
+        this.actionPoints++;
+    }
+
+    public void removeActionPoint() {
+        this.actionPoints--;
+    }
+
+    public String getColored() {
+        return this.color.getCode() + this.icon;
     }
 }

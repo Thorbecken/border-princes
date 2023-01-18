@@ -10,11 +10,13 @@ public abstract class Building implements Target {
     private final Tile tile;
 
     private final String icon;
+    private final Color color;
 
-    public Building(long teamId, @NonNull Tile tile, @NonNull String icon) {
+    public Building(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull Color color) {
         this.teamId = teamId;
         this.tile = tile;
         this.icon = icon;
+        this.color = color;
     }
 
     public abstract void takeTurn(Game game);
@@ -24,5 +26,9 @@ public abstract class Building implements Target {
         return "Building{" +
                 "icon='" + icon + '\'' +
                 '}';
+    }
+
+    public String getColored() {
+        return this.color.getCode() + this.icon;
     }
 }

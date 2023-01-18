@@ -36,6 +36,11 @@ public class BorderPrinces {
     }
 
     private static Game processInput(String input, Game game, Scanner sc) {
+        if (game.player.getActionPoints() <= 0) {
+            System.out.println("You have no actionpoints left, please wait and press enter.");
+            sc.nextLine();
+            return game;
+        }
         input = checkInput(input, game, sc);
 
         ConsoleActions consoleAction = ConsoleActions.get(input);
@@ -67,9 +72,9 @@ public class BorderPrinces {
                 input = sc.nextLine();
                 return ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
             }
-            default -> {
-            }
+            default -> game.player.addActionPoint();
         }
+        game.player.removeActionPoint();
         return game;
     }
 
@@ -88,8 +93,8 @@ public class BorderPrinces {
         if (currentUnits < currentBuildings) {
             Tile recruitmentTile = player.getTile();
             UnitLogic unitLogic = null;
-            while(unitLogic == null){
-                Arrays.stream(UnitLogic.values()).forEach( ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
+            while (unitLogic == null) {
+                Arrays.stream(UnitLogic.values()).forEach(ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
                 System.out.println("current unit count: " + currentUnits);
                 unitLogic = UnitLogic.get(sc.nextLine());
             }
@@ -115,12 +120,14 @@ public class BorderPrinces {
         Long id = null;
         try {
             id = Long.parseLong(sc.nextLine());
-        } catch(NumberFormatException ignored){}
-        if (id != null){
+        } catch (NumberFormatException ignored) {
+        }
+
+        if (id != null) {
             final long finalId = id;
             UnitLogic unitLogic = null;
-            while(unitLogic == null){
-                Arrays.stream(UnitLogic.values()).forEach( ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
+            while (unitLogic == null) {
+                Arrays.stream(UnitLogic.values()).forEach(ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
                 unitLogic = UnitLogic.get(sc.nextLine());
             }
             final UnitLogic finalUnitLogic = unitLogic;
@@ -147,6 +154,7 @@ public class BorderPrinces {
         checkState(game);
         moveUnits(game);
         buildingChecks(game);
+        addActionPoints(game);
     }
 
     private static void checkState(Game game) {
@@ -162,6 +170,7 @@ public class BorderPrinces {
         game.units.forEach(Unit::takeAction);
         game.units = game.units.stream()
                 .filter(unit -> unit.getHealth() > 0)
+                .filter(unit -> unit.getActionPoints() > 0)
                 .collect(Collectors.toList());
         game.units.forEach(unit -> {
             if (!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())) {
@@ -172,5 +181,9 @@ public class BorderPrinces {
 
     private static void buildingChecks(Game game) {
         game.buildings.forEach(building -> building.takeTurn(game));
+    }
+
+    private static void addActionPoints(Game game) {
+        game.units.forEach(Unit::addActionPoint);
     }
 }
