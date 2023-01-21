@@ -3,10 +3,17 @@ Third version wil have the following features:
 ~~BP-022: implement impassable terrain~~
 ~~BP-023: Implement pathfinding with A*~~
 ~~BP-024: implement movement points per unit per action/turn.~~
-BP-025: implement terrain movement cost that makes hills more difficult to maneuver.  Units don't move while having negative action points.
+~~BP-025: implement terrain movement cost that makes hills more difficult to maneuver.  Units don't move while having negative action points.
 - default = 1 ap
 - forest = 2 ap
-- hills = 3 ap
+- hills = 3 ap~~
+BP-026: add grainfields
+- building for player to build
+- adds food to adjacend village
+- can we burned by monsters
+BP-027: add farmer unit
+- farmer creates farms around villages of same team
+BP-028: add unit roster with commands to village for automatic creation
 
 # Wishlist
 

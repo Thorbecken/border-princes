@@ -25,7 +25,7 @@ public class BorderPrinces {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String input = "";
-        Game game = ScenarioLoader.createGame(ScenarioMaps.riverMap);
+        Game game = ScenarioLoader.createGame(ScenarioMaps.mountainMap);
 
         while (!input.equals(ConsoleActions.QUIT.action)) {
             System.out.println("\u001B[32m" + Map.printTile(game));
@@ -170,13 +170,14 @@ public class BorderPrinces {
         game.units.forEach(Unit::takeAction);
         game.units = game.units.stream()
                 .filter(unit -> unit.getHealth() > 0)
-                .filter(unit -> unit.getActionPoints() > 0)
                 .collect(Collectors.toList());
-        game.units.forEach(unit -> {
-            if (!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())) {
-                unit.setCurrentTarget(null);
-            }
-        });
+        game.units.stream()
+                .filter(unit -> unit.getActionPoints() > 0)
+                .forEach(unit -> {
+                    if (!game.units.contains(unit.getCurrentTarget()) && !game.buildings.contains(unit.getCurrentTarget())) {
+                        unit.setCurrentTarget(null);
+                    }
+                });
     }
 
     private static void buildingChecks(Game game) {

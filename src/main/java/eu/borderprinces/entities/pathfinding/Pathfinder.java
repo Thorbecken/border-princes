@@ -2,6 +2,8 @@ package eu.borderprinces.entities.pathfinding;
 
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
+import eu.borderprinces.entities.pathfinding.scorer.DistanceScorer;
+import eu.borderprinces.entities.pathfinding.scorer.MovementScorer;
 
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class Pathfinder {
 
 
         Graph<Tile> worldMap = new Graph<>(tiles, connections);
-        routeFinder = new RouteFinder<>(worldMap, new TileScorer(), new TileScorer());
+        routeFinder = new RouteFinder<>(worldMap, new MovementScorer(), new DistanceScorer());
     }
 
     public List<Tile> pathfind(Tile from, Tile to) {

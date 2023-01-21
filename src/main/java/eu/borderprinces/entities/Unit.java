@@ -76,6 +76,8 @@ public abstract class Unit implements Target {
                 this.tile.removeUnit(this);
                 tile.addUnit(this);
                 this.tile = tile;
+                this.actionPoints -= tile.getTerrain().getTerrainType().getMovementCost();
+                this.actionPoints++;
             } else {
                 tile.getUnits().get(0).combat(this);
             }

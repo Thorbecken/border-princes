@@ -8,37 +8,28 @@ public class ScenarioMaps {
     public static HashMap<String, HashMap<Integer, HashMap<Integer, String>>> scenarios = new HashMap<>();
     public static HashMap<Integer, HashMap<Integer, String>> riverMap = new HashMap<>();
     public static HashMap<Integer, HashMap<Integer, String>> coastalMap = new HashMap<>();
+    public static HashMap<Integer, HashMap<Integer, String>> mountainMap = new HashMap<>();
 
     static {
         scenarios.put("river", riverMap);
         scenarios.put("coastal", coastalMap);
+        scenarios.put("mountain", mountainMap);
     }
-
-    // ^ = mountain
-    // ~ = river
-    // = = bridge
-    // - = plain
-    // * = forest
-    // _ = bare ground
-    // π = monster lair
-    // n = village
-    // M = monster
-    // | = player
 
     static {
         for (int i = 1; i <= 32; i++) {
             riverMap.put(i, new HashMap<>());
         }
 
-        putString(riverMap, 1, "^^^^~-^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        putString(riverMap, 2, "^^^^~--^^^^^^^^^*****^^^^^^^^^^^");
-        putString(riverMap, 3, "^^^^~~-_^^^^**************^^^^^^");
-        putString(riverMap, 4, "^^^^^~~--^^*************-----^^^");
-        putString(riverMap, 5, "^^^^^^~------******-_****-------");
-        putString(riverMap, 6, "^^^^^^~-------**----*****-------");
-        putString(riverMap, 7, "^^^^^^~~----------*****---------");
-        putString(riverMap, 8, "^^^^^^^~~---------------------^^");
-        putString(riverMap, 9, "^^^^^^^^~~-----------------^^^^^");
+         putString(riverMap, 1, "^^^^~-^^^^^^^^^^^^^^^^^^^^^^^^^^");
+         putString(riverMap, 2, "^^^^~--^^^^^^^^^*****^^^^^^^^^^^");
+         putString(riverMap, 3, "^^^^~~-_^^^^**************^^^^^^");
+         putString(riverMap, 4, "^^^^^~~--^^*************-----^^^");
+         putString(riverMap, 5, "^^^^^^~------******-_****-------");
+         putString(riverMap, 6, "^^^^^^~-------**----*****-------");
+         putString(riverMap, 7, "^^^^^^~~----------*****---------");
+         putString(riverMap, 8, "^^^^^^^~~---------------------^^");
+         putString(riverMap, 9, "^^^^^^^^~~-----------------^^^^^");
         putString(riverMap, 10, "^^^^_-^^^~~=~~~------^^^^^^^^^^^");
         putString(riverMap, 11, "^^^^^---------~~--------^^^^^^^^");
         putString(riverMap, 12, "**^^^^^^-------~~~-----------_^^");
@@ -67,15 +58,15 @@ public class ScenarioMaps {
             coastalMap.put(i, new HashMap<>());
         }
 
-         putString(coastalMap, 1, "~~~---------------***_----------");
-         putString(coastalMap, 2, "~~~-----------***********-------");
-         putString(coastalMap, 3, "~~~~--------*****^^^^^^^**------");
-         putString(coastalMap, 4, "~~~~~~-----***^^^^^******-------");
-         putString(coastalMap, 5, "~~~~~~----****^^*********-------");
-         putString(coastalMap, 6, "~~~~--------*********^^*--------");
-         putString(coastalMap, 7, "~~~~----------***^^^^^**--------");
-         putString(coastalMap, 8, "~~~~--------****^^*****-------_~");
-         putString(coastalMap, 9, "~~~~-------****^^****_-------~~~");
+        putString(coastalMap, 1, "~~~---------------***_----------");
+        putString(coastalMap, 2, "~~~-----------***********-------");
+        putString(coastalMap, 3, "~~~~--------*****^^^^^^^**------");
+        putString(coastalMap, 4, "~~~~~~-----***^^^^^******-------");
+        putString(coastalMap, 5, "~~~~~~----****^^*********-------");
+        putString(coastalMap, 6, "~~~~--------*********^^*--------");
+        putString(coastalMap, 7, "~~~~----------***^^^^^**--------");
+        putString(coastalMap, 8, "~~~~--------****^^*****-------_~");
+        putString(coastalMap, 9, "~~~~-------****^^****_-------~~~");
         putString(coastalMap, 10, "~~-----*******^^***--------~~~~~");
         putString(coastalMap, 11, "~~--*************---------~~~~~-");
         putString(coastalMap, 12, "~~*******_------------~~~~~~~---");
@@ -99,5 +90,42 @@ public class ScenarioMaps {
         putString(coastalMap, 30, "~~~~~~~~~--^-~~~~~~~~~~~~~~~~~~~");
         putString(coastalMap, 31, "~~~~~~~~~~~--~~~~~~~~~~~~~~~~~~~");
         putString(coastalMap, 32, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+        for (int i = 1; i <= 32; i++) {
+            mountainMap.put(i, new HashMap<>());
+        }
+
+         putString(mountainMap, 1, "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+         putString(mountainMap, 2, "**^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+         putString(mountainMap, 3, "****----^^^^^^^^^^^^^^^~^^^^****");
+         putString(mountainMap, 4, "**-----~~~~^^^^^^^^****~~~******");
+         putString(mountainMap, 5, "*-----~~-***^^^^^^^******~******");
+         putString(mountainMap, 6, "---~~~~*****^^^^^^^*****~~******");
+         putString(mountainMap, 7, "--~~-_-******^^^^^^***-_=-*****-");
+         putString(mountainMap, 8, "--~----******^^^^^^*----~-------");
+         putString(mountainMap, 9, "--~**********^^^^^^----~~**-----");
+        putString(mountainMap, 10, "--~********^^^^^^^----~~****----");
+        putString(mountainMap, 11, "~~~*******^^^^^^-----~~****-----");
+        putString(mountainMap, 12, "~--****-^^^^_-------~~****-----^");
+        putString(mountainMap, 13, "~~*****^^~~~=~~---~=~~~~------^^");
+        putString(mountainMap, 14, "~~~~***-~~~~=~~~~~~_-**~~~--^^^^");
+        putString(mountainMap, 15, "**~~~~~~~~^^^^^~~~~~--***~~=~^^^");
+        putString(mountainMap, 16, "***~~~~~^^^^^^^^^^~~~~*^^^^-^^^^");
+        putString(mountainMap, 17, "******^^^^^^^^^^^^^^~~^^^^^--^^^");
+        putString(mountainMap, 18, "***--^^^^^^^^^^^^^^^~~^^^^^^-***");
+        putString(mountainMap, 19, "*---^^^^^-~~~~^^^~~~~-^^^^**-~~~");
+        putString(mountainMap, 20, "---^^^^--~~^^~~~~~~~~^^^^**~=~**");
+        putString(mountainMap, 21, "-^^^----_~^^~~~~~^^^^^^^*~~~-***");
+        putString(mountainMap, 22, "^^------~~^^~~~^^^^^^^^*~~~--***");
+        putString(mountainMap, 23, "------**~*^^^~~^^^^^^^^~~-_---**");
+        putString(mountainMap, 24, "---*****~**^^~~~~~~^^~~~^^**-***");
+        putString(mountainMap, 25, "---****~~***^^^^~~~~~~~^^^***-***");
+        putString(mountainMap, 26, "---****~*******^^^^~~~~~****-***");
+        putString(mountainMap, 27, "---***~~**********^^^^~~~~~~=~~~");
+        putString(mountainMap, 28, "---**~*************^^^^^~~~~=~~~");
+        putString(mountainMap, 29, "---**~****************^^^^--_---");
+        putString(mountainMap, 30, "----~~------************--------");
+        putString(mountainMap, 31, "~~~~~_------******--------------");
+        putString(mountainMap, 32, "---------------***--------------");
     }
 }

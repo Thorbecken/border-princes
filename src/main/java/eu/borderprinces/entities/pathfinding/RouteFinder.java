@@ -1,5 +1,6 @@
 package eu.borderprinces.entities.pathfinding;
 
+import eu.borderprinces.entities.pathfinding.scorer.Scorer;
 import lombok.AllArgsConstructor;
 
 import java.util.*;

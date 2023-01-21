@@ -1,0 +1,12 @@
+package eu.borderprinces.entities.pathfinding.scorer;
+
+import eu.borderprinces.entities.Tile;
+
+public class MovementScorer implements Scorer<Tile> {
+    @Override
+    public double computeCost(Tile from, Tile to) {
+
+        return to.getTravelCost();
+    }
+
+}
