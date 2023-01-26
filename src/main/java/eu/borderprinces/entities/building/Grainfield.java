@@ -4,29 +4,26 @@ import eu.borderprinces.entities.Building;
 import eu.borderprinces.entities.Color;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
-import lombok.Getter;
 import lombok.NonNull;
 
-public class Village extends Building {
+public class Grainfield extends Building {
 
-    @Getter
-    int grainFields;
+    private final Village village;
 
-    public Village(long teamId, @NonNull Tile tile, @NonNull String icon) {
+    public Grainfield(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull Village village) {
         super(teamId, tile, icon, Color.PURPLE);
-        this.grainFields = 1;
+        this.village = village;
+        this.village.grainFields++;
     }
 
     @Override
     public void takeTurn(Game game) {
-        this.getTile().getUnits().stream()
-                .filter(unit -> this.getTeamId().equals(unit.getTeamId()))
-                .forEach(unit -> unit.setHealth(unit.getMaxHealth()));
+
     }
 
     @Override
     public void destroy(Game game) {
-
+        this.village.grainFields--;
+        game.buildings.remove(this);
     }
-
 }

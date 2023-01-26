@@ -1,5 +1,6 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.building.Grainfield;
 import eu.borderprinces.entities.building.Lair;
 import eu.borderprinces.entities.building.Village;
 import eu.borderprinces.entities.pathfinding.GraphNode;
@@ -26,10 +27,10 @@ public class Tile implements GraphNode {
     private final Integer column;
 
     public boolean openOrFriendly(Long teamId) {
-        return this.controlingTeam == null || teamId.equals(this.controlingTeam);
+        return this.controllingTeam == null || teamId.equals(this.controllingTeam);
     }
 
-    private Long controlingTeam;
+    private Long controllingTeam;
     private String currentIcon;
     private Terrain terrain;
     private Building building;
@@ -40,7 +41,7 @@ public class Tile implements GraphNode {
         this.row = row;
         this.column = column;
         this.units = new ArrayList<>();
-        this.controlingTeam = null;
+        this.controllingTeam = null;
 
         setTerrain(terrain);
     }
@@ -74,10 +75,15 @@ public class Tile implements GraphNode {
         setCurrentIcon();
     }
 
+    public void createGrainField(String grainField, Village nearestVillage) {
+        this.building = new Grainfield(TEAM_PLAYER, this, grainField, nearestVillage);
+        setCurrentIcon();
+    }
+
     public void addUnit(Unit unit) {
         if (this.units.isEmpty()) {
-            this.controlingTeam = unit.getTeamId();
-        } else if (!this.controlingTeam.equals(unit.getTeamId())) {
+            this.controllingTeam = unit.getTeamId();
+        } else if (!this.controllingTeam.equals(unit.getTeamId())) {
             throw new RuntimeException("Tile is owned by another team");
         }
 
@@ -88,7 +94,7 @@ public class Tile implements GraphNode {
     public void removeUnit(Unit unit) {
         this.units.remove(unit);
         if (units.isEmpty()) {
-            this.controlingTeam = null;
+            this.controllingTeam = null;
         }
         setCurrentIcon();
     }
@@ -98,10 +104,7 @@ public class Tile implements GraphNode {
     }
 
     public void destroyBuilding(Game game) {
-        game.buildings.remove(this.building);
-        if (game.buildings.stream().map(Building::getTeamId).noneMatch(b -> b.equals(TEAM_PLAYER))) {
-            throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
-        }
+        this.building.destroy(game);
         this.building = null;
         setCurrentIcon();
     }

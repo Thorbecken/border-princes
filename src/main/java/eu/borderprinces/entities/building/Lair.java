@@ -16,23 +16,25 @@ public class Lair extends Building {
     public final String monsterType;
     private final List<Unit> spawnedUnits = new ArrayList<>();
 
-    public Lair(long teamId, @NonNull Tile tile, @NonNull String building, @NonNull String monsterType) {
-        super(teamId, tile, building, Color.RED);
+    public Lair(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull String monsterType) {
+        super(teamId, tile, icon, Color.RED);
         this.monsterType = monsterType;
     }
 
     @Override
     public void takeTurn(Game game) {
         this.purgeTheDead();
-        Random random = new Random();
-        int change = random.nextInt(10);
-        if (change == 0) {
-            if (!this.hasDefender()) {
-                this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, DEFEND));
-            } else if (!this.hasPatroller()) {
-                this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, PATROL));
-            } else {
-                this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, SEARCH_AND_DESTROY));
+        if(this.getTile().openOrFriendly(this.getTeamId())) {
+            Random random = new Random();
+            int change = random.nextInt(10);
+            if (change == 0) {
+                if (!this.hasDefender()) {
+                    this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, DEFEND));
+                } else if (!this.hasPatroller()) {
+                    this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, PATROL));
+                } else {
+                    this.spawnedUnits.add(new Monster(this.getTeamId(), this.getTile(), this.monsterType, game, SEARCH_AND_DESTROY));
+                }
             }
         }
     }

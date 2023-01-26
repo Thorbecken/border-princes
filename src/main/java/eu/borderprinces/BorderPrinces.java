@@ -4,6 +4,7 @@ import eu.borderprinces.entities.Building;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import eu.borderprinces.entities.Unit;
+import eu.borderprinces.entities.building.Village;
 import eu.borderprinces.entities.unit.Player;
 import eu.borderprinces.entities.unit.Soldier;
 import eu.borderprinces.entities.unit.UnitLogic;
@@ -25,7 +26,7 @@ public class BorderPrinces {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String input = "";
-        Game game = ScenarioLoader.createGame(ScenarioMaps.mountainMap);
+        Game game = ScenarioLoader.createGame(ScenarioMaps.coastalMap);
 
         while (!input.equals(ConsoleActions.QUIT.action)) {
             System.out.println("\u001B[32m" + Map.printTile(game));
@@ -64,6 +65,19 @@ public class BorderPrinces {
                     game.buildings.add(currentTile.getBuilding());
                 }
             }
+            case SOW_GRAIN_FIELD -> {
+                Tile currentTile = game.player.getTile();
+                if (currentTile.getBuilding() == null &&
+                        FERTILE_GROUND.equals(currentTile.getTerrain().getIcon())) {
+                    Village nearestFriendlyVillage = game.buildings.stream()
+                            .filter(building -> building instanceof Village)
+                            .map(building -> ((Village) building))
+                            .min(Comparator.comparing(village -> village.getTile().getDistance(game.player.getTile())))
+                            .orElseThrow();
+                    currentTile.createGrainField(GRAIN_FIELD, nearestFriendlyVillage);
+                    game.buildings.add(currentTile.getBuilding());
+                }
+            }
             case RECRUIT -> recruitOption(game, sc);
             case COMMAND -> commandOption(game, sc);
             case NEW_GAME -> {
@@ -86,8 +100,11 @@ public class BorderPrinces {
         // player doesn't count
         currentUnits--;
         long currentBuildings = game.buildings.stream()
+                .filter(building -> building instanceof Village)
+                .map(building -> ((Village) building))
                 .filter(building -> player.getTeamId() == building.getTeamId())
-                .count();
+                .mapToInt(Village::getGrainFields)
+                .sum();
         System.out.println("current unit count: " + currentUnits);
         System.out.println("current village count: " + currentBuildings);
         if (currentUnits < currentBuildings) {

@@ -7,15 +7,21 @@ Third version wil have the following features:
 - default = 1 ap
 - forest = 2 ap
 - hills = 3 ap~~
-BP-026: add grainfields
+BP-026: add grain fields
 - building for player to build
-- adds food to adjacend village
-- can we burned by monsters
+- adds food to adjacent village
+- can be burned by monsters
 BP-027: add farmer unit
 - farmer creates farms around villages of same team
 BP-028: add unit roster with commands to village for automatic creation
+BP-029: add command build village
+- builds village
+- goes to defense mode after construction
 
 # Wishlist
+BP-999: Wood factiom
+- W = Woodland deer-spirit: stays on barren ground and spawns smaller deer-spirits.
+- w = Deer-spirit: creates forest tiles in the nearest plain
 
 BP-999: Troll faction
 - T = troll (medium strength)

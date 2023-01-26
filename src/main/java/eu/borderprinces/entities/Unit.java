@@ -144,6 +144,7 @@ public abstract class Unit implements Target {
         this.currentTarget = this.protectionTarget;
         game.units.stream()
                 .filter(otherUnit -> otherUnit.getTeamId() != this.getTeamId())
+                .filter(Unit::notDead)
                 .map(Unit::getTile)
                 .filter(tile -> defendTile.getDistance(tile) < patrolRange)
                 .findFirst()
@@ -153,10 +154,14 @@ public abstract class Unit implements Target {
         moveRandomToTarget();
     }
 
+    private boolean notDead() {
+        return this.health > 0;
+    }
+
     protected void moveRandomToTarget() {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
-        if (direction > 1) {
+        if (direction > 1 && !currentPath.isEmpty()) {
             Tile nextTile = currentPath.remove(0);
             this.move(nextTile);
         } else if (direction == 1) {

@@ -1,7 +1,10 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.building.Village;
 import lombok.Data;
 import lombok.NonNull;
+
+import static eu.borderprinces.BorderPrincesConstants.TEAM_PLAYER;
 
 @Data
 public abstract class Building implements Target {
@@ -20,6 +23,15 @@ public abstract class Building implements Target {
     }
 
     public abstract void takeTurn(Game game);
+    public void destroy(Game game){
+        game.buildings.remove(this);
+        if (game.buildings.stream()
+                .filter(x -> x instanceof Village)
+                .map(Building::getTeamId)
+                .noneMatch(b -> b.equals(TEAM_PLAYER))) {
+            throw new RuntimeException("YOU LOSE! YOU HAVE LOST ALL VILLAGES!");
+        }
+    }
 
     @Override
     public String toString() {

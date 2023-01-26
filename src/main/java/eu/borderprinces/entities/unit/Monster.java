@@ -20,7 +20,7 @@ public class Monster extends Unit {
         // units can be killed in another units action
         if (getHealth() > 0) {
             if (this.getTile().getBuilding() != null
-                    && VILLAGE.equals(this.getTile().getBuilding().getIcon())) {
+                    && this.getTeamId() != this.getTile().getBuilding().getTeamId()) {
                 this.getTile().destroyBuilding(this.getGame());
             } else if (this.getTile().getBuilding() == null
                     && BARE_GROUND.equals(this.getTile().getTerrain().getIcon())) {

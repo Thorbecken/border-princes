@@ -47,6 +47,13 @@ public enum ConsoleActions {
                     .isPresent()),
     COMMAND("command",
             tile -> true),
+    SOW_GRAIN_FIELD("sow grain field",
+            tile -> Optional.ofNullable(tile)
+                    .filter(t -> t.getBuilding() == null)
+                    .map(Tile::getTerrain)
+                    .map(Terrain::getIcon)
+                    .filter(FERTILE_GROUND::equals)
+                    .isPresent()),
     WAIT("wait",
             tile -> true),
     EMPTY("",

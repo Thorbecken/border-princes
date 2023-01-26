@@ -11,6 +11,7 @@ public enum TerrainType {
     PLAIN(1d, BorderPrincesConstants.PLAIN, Color.YELLOW),
     BRIDGE(1d, BorderPrincesConstants.BRIDGE, Color.YELLOW),
     BARE_GROUND(1, BorderPrincesConstants.BARE_GROUND, Color.YELLOW),
+    FERTILE_GROUND(1, BorderPrincesConstants.FERTILE_GROUND, Color.YELLOW),
     WATER(1d, BorderPrincesConstants.WATER, Color.BLUE),
     FOREST(2d, BorderPrincesConstants.FOREST, Color.GREEN),
     MOUNTAIN(3d, BorderPrincesConstants.MOUNTAIN, Color.WHITE);
@@ -32,6 +33,8 @@ public enum TerrainType {
             return FOREST;
         } else if (BorderPrincesConstants.MOUNTAIN.equals(type)){
             return MOUNTAIN;
+        } else if (BorderPrincesConstants.FERTILE_GROUND.equals(type)){
+            return FERTILE_GROUND;
         } else {
             throw new RuntimeException("Type " + type + " not implemented");
         }
