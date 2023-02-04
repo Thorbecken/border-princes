@@ -14,7 +14,8 @@ public enum UnitType {
     SOLDIER("Soldier", "s", true, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
     PRINCE("Prince", "p", false, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
     MONSTER("Monster", "m", false, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
-    FARMER("Farmer", "f", true, List.of(UnitLogic.FARM));
+    FARMER("Farmer", "f", true, List.of(UnitLogic.FARM)),
+    BUILDER("Builder", "b", true, List.of(UnitLogic.BUILD_VILLAGE));
 
     private final String name;
     private final String selectionShortcut;

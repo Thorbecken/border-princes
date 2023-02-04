@@ -10,14 +10,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Soldier extends Unit {
+public class Builder extends Unit {
 
-    public Soldier(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game, UnitLogic unitLogic) {
-        super(teamid, tile, icon, 3, game, unitLogic, Color.PURPLE);
+    public Builder(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game, UnitLogic unitLogic) {
+        super(teamid, tile, icon, 1, game, unitLogic, Color.PURPLE);
     }
 
     @Override
     public UnitType getUnitType() {
-        return UnitType.SOLDIER;
+        return UnitType.BUILDER;
     }
 }

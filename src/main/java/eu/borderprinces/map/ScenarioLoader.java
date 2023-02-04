@@ -41,14 +41,14 @@ public class ScenarioLoader {
 
     private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {
         playerStartingTiles.forEach(village -> {
-            village.createVillage(VILLAGE);
+            village.createVillage();
             game.buildings.add(village.getBuilding());
         });
     }
 
     private static void generateLairs(List<Tile> monsterStartingTiles, Game game) {
         monsterStartingTiles.forEach(lair -> {
-            lair.createLair(MONSTER_LAIR, TEAM_MONSTERS);
+            lair.createLair(TEAM_MONSTERS);
             game.buildings.add(lair.getBuilding());
         });
     }

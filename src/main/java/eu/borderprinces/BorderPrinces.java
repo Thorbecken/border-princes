@@ -56,7 +56,7 @@ public class BorderPrinces {
                 Tile currentTile = game.prince.getTile();
                 if (currentTile.getBuilding() == null &&
                         BARE_GROUND.equals(currentTile.getTerrain().getIcon())) {
-                    currentTile.createVillage(VILLAGE);
+                    currentTile.createVillage();
                     game.buildings.add(currentTile.getBuilding());
                 }
             }
@@ -113,6 +113,7 @@ public class BorderPrinces {
             switch (unitType){
                 case SOLDIER -> new Soldier(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
                 case FARMER -> new Farmer(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
+                case BUILDER -> new Builder(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
                 default -> throw new RuntimeException();
             }
         } else {

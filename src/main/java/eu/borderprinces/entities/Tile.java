@@ -62,13 +62,13 @@ public class Tile implements GraphNode {
         return terrain;
     }
 
-    public void createLair(String building, long teamId) {
-        this.building = new Lair(teamId, this, building, MONSTER);
+    public void createLair(long teamId) {
+        this.building = new Lair(teamId, this, MONSTER_LAIR, MONSTER);
         setCurrentIcon();
     }
 
-    public void createVillage(String building) {
-        this.building = new Village(TEAM_PLAYER, this, building);
+    public void createVillage() {
+        this.building = new Village(TEAM_PLAYER, this, VILLAGE);
         setCurrentIcon();
     }
 

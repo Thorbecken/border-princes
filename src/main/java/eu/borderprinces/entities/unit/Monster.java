@@ -24,12 +24,12 @@ public class Monster extends Unit {
                 this.getTile().destroyBuilding(this.getGame());
             } else if (this.getTile().getBuilding() == null
                     && BARE_GROUND.equals(this.getTile().getTerrain().getIcon())) {
-                this.getTile().createLair(MONSTER_LAIR, this.getTeamId());
+                this.getTile().createLair(this.getTeamId());
             } else {
                 if (currentTarget == null) {
                     this.setCurrentTarget();
                 }
-                this.moveRandomToTarget(false);
+                this.moveRandomToTarget();
             }
         }
     }

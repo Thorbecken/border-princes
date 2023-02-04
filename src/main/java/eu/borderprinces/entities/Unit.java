@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static eu.borderprinces.BorderPrincesConstants.FERTILE_GROUND;
-import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
+import static eu.borderprinces.BorderPrincesConstants.*;
 import static eu.borderprinces.entities.unit.UnitLogic.DEFEND;
 
 @Data
@@ -118,13 +117,14 @@ public abstract class Unit implements Target {
                 case PATROL -> this.patrol();
                 case SEARCH_AND_DESTROY -> this.killAndDestroy();
                 case FARM -> this.farm();
+                case BUILD_VILLAGE -> this.buildVillage();
             }
         }
     }
 
     protected void defend() {
         if (!this.getTile().equals(protectionTarget.getTile())) {
-            moveRandomToTarget(false);
+            moveRandomToTarget();
         } else {
             this.currentTarget = protectionTarget;
         }
@@ -139,7 +139,7 @@ public abstract class Unit implements Target {
             if (currentTarget == null) {
                 this.setCurrentTarget();
             }
-            this.moveRandomToTarget(false);
+            this.moveRandomToTarget();
         }
     }
 
@@ -155,7 +155,7 @@ public abstract class Unit implements Target {
                 .ifPresent(tile -> this.currentTarget = tile.getUnits().get(0));
         calculatePath();
 
-        moveRandomToTarget(false);
+        moveRandomToTarget();
     }
 
     private void farm() {
@@ -165,9 +165,22 @@ public abstract class Unit implements Target {
             this.currentTarget = null;
         } else {
             if (currentTarget == null) {
-                this.setCurrentFarmingTarget();
+                this.setCurrentEmptyGroundTarget(FERTILE_GROUND);
             }
-            this.moveRandomToTarget(true);
+            this.moveRandomToTarget();
+        }
+    }
+
+    private void buildVillage() {
+        if (this.getTile().getBuilding() == null
+                && BARE_GROUND.equals(this.getTile().getTerrain().getIcon())) {
+            this.getTile().createVillage();
+            this.currentTarget = null;
+        } else {
+            if (currentTarget == null) {
+                this.setCurrentEmptyGroundTarget(BARE_GROUND);
+            }
+            this.moveRandomToTarget();
         }
     }
 
@@ -175,7 +188,7 @@ public abstract class Unit implements Target {
         return this.health > 0;
     }
 
-    protected void moveRandomToTarget(boolean moveToTile) {
+    protected void moveRandomToTarget() {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
         if (direction > 1 && !currentPath.isEmpty()) {
@@ -187,22 +200,14 @@ public abstract class Unit implements Target {
                     0,
                     rand.nextInt(-1, 2)
             );
-            if(moveToTile) {
-                this.calculatePathToTile();
-            } else {
-                this.calculatePath();
-            }
+            this.currentTarget = null;
         } else if (direction == 0) {
             this.move(
                     this.game,
                     rand.nextInt(-1, 2),
                     0
             );
-            if(moveToTile) {
-                this.calculatePathToTile();
-            } else {
-                this.calculatePath();
-            }
+            this.currentTarget = null;
         }
     }
 
@@ -216,10 +221,10 @@ public abstract class Unit implements Target {
         this.calculatePath();
     }
 
-    protected void setCurrentFarmingTarget() {
+    protected void setCurrentEmptyGroundTarget(String terrainType) {
         moveToTile = game.scenario.values().stream()
                 .flatMap(map -> map.values().stream())
-                .filter(tile -> FERTILE_GROUND.equals(tile.getTerrain().getIcon()))
+                .filter(tile -> terrainType.equals(tile.getTerrain().getIcon()))
                 .filter(tile -> tile.getBuilding() == null)
                 .min(Comparator.comparingInt(x -> x.getDistance(this.getTile())))
                 .orElse(null);
