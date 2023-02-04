@@ -1,7 +1,7 @@
 package eu.borderprinces.map;
 
 import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.unit.Player;
+import eu.borderprinces.entities.unit.Prince;
 import eu.borderprinces.entities.Tile;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class ScenarioLoader {
     private static void generatePlayer(List<Tile> playerStartingTiles, Game game) {
         Random random = new Random();
         Tile StartingTile = playerStartingTiles.get(random.nextInt(playerStartingTiles.size()));
-        new Player(TEAM_PLAYER, StartingTile, PLAYER, game);
+        new Prince(TEAM_PLAYER, StartingTile, PLAYER, game);
     }
 
     private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {

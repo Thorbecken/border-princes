@@ -2,8 +2,9 @@ package eu.borderprinces.entities;
 
 import eu.borderprinces.BorderPrincesConstants;
 import eu.borderprinces.entities.pathfinding.Pathfinder;
-import eu.borderprinces.entities.unit.Player;
+import eu.borderprinces.entities.unit.Prince;
 import eu.borderprinces.entities.unit.UnitLogic;
+import eu.borderprinces.entities.unit.UnitType;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import static eu.borderprinces.BorderPrincesConstants.FERTILE_GROUND;
 import static eu.borderprinces.BorderPrincesConstants.MONSTER_LAIR;
 import static eu.borderprinces.entities.unit.UnitLogic.DEFEND;
 
@@ -26,6 +28,7 @@ public abstract class Unit implements Target {
     private int actionPoints;
     private Tile tile;
     protected Target currentTarget;
+    protected Tile moveToTile;
     private final String icon;
     private final Color color;
     private final Game game;
@@ -96,7 +99,7 @@ public abstract class Unit implements Target {
     }
 
     protected void die() {
-        if (this instanceof Player) {
+        if (this instanceof Prince) {
             throw new RuntimeException("You lose '_' ");
         } else {
             this.health = 0;
@@ -114,13 +117,14 @@ public abstract class Unit implements Target {
                 case DEFEND -> this.defend();
                 case PATROL -> this.patrol();
                 case SEARCH_AND_DESTROY -> this.killAndDestroy();
+                case FARM -> this.farm();
             }
         }
     }
 
     protected void defend() {
         if (!this.getTile().equals(protectionTarget.getTile())) {
-            moveRandomToTarget();
+            moveRandomToTarget(false);
         } else {
             this.currentTarget = protectionTarget;
         }
@@ -135,7 +139,7 @@ public abstract class Unit implements Target {
             if (currentTarget == null) {
                 this.setCurrentTarget();
             }
-            this.moveRandomToTarget();
+            this.moveRandomToTarget(false);
         }
     }
 
@@ -151,14 +155,27 @@ public abstract class Unit implements Target {
                 .ifPresent(tile -> this.currentTarget = tile.getUnits().get(0));
         calculatePath();
 
-        moveRandomToTarget();
+        moveRandomToTarget(false);
+    }
+
+    private void farm() {
+        if (this.getTile().getBuilding() == null
+                && FERTILE_GROUND.equals(this.getTile().getTerrain().getIcon())) {
+            this.getTile().createGrainField(this.game);
+            this.currentTarget = null;
+        } else {
+            if (currentTarget == null) {
+                this.setCurrentFarmingTarget();
+            }
+            this.moveRandomToTarget(true);
+        }
     }
 
     private boolean notDead() {
         return this.health > 0;
     }
 
-    protected void moveRandomToTarget() {
+    protected void moveRandomToTarget(boolean moveToTile) {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
         if (direction > 1 && !currentPath.isEmpty()) {
@@ -170,14 +187,22 @@ public abstract class Unit implements Target {
                     0,
                     rand.nextInt(-1, 2)
             );
-            this.calculatePath();
+            if(moveToTile) {
+                this.calculatePathToTile();
+            } else {
+                this.calculatePath();
+            }
         } else if (direction == 0) {
             this.move(
                     this.game,
                     rand.nextInt(-1, 2),
                     0
             );
-            this.calculatePath();
+            if(moveToTile) {
+                this.calculatePathToTile();
+            } else {
+                this.calculatePath();
+            }
         }
     }
 
@@ -191,8 +216,24 @@ public abstract class Unit implements Target {
         this.calculatePath();
     }
 
+    protected void setCurrentFarmingTarget() {
+        moveToTile = game.scenario.values().stream()
+                .flatMap(map -> map.values().stream())
+                .filter(tile -> FERTILE_GROUND.equals(tile.getTerrain().getIcon()))
+                .filter(tile -> tile.getBuilding() == null)
+                .min(Comparator.comparingInt(x -> x.getDistance(this.getTile())))
+                .orElse(null);
+        if(moveToTile != null) {
+            this.calculatePathToTile();
+        }
+    }
+
     private void calculatePath() {
         this.currentPath = new Pathfinder(game).pathfind(this.tile, currentTarget.getTile());
+    }
+
+    private void calculatePathToTile() {
+        this.currentPath = new Pathfinder(game).pathfind(this.tile, moveToTile);
     }
 
     @Override
@@ -214,4 +255,6 @@ public abstract class Unit implements Target {
     public String getColored() {
         return this.color.getCode() + this.icon;
     }
+
+    public abstract UnitType getUnitType();
 }

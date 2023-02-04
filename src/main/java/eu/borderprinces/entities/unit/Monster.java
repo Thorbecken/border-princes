@@ -29,8 +29,13 @@ public class Monster extends Unit {
                 if (currentTarget == null) {
                     this.setCurrentTarget();
                 }
-                this.moveRandomToTarget();
+                this.moveRandomToTarget(false);
             }
         }
+    }
+
+    @Override
+    public UnitType getUnitType() {
+        return UnitType.MONSTER;
     }
 }

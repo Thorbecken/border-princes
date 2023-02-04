@@ -1,6 +1,6 @@
 package eu.borderprinces.entities;
 
-import eu.borderprinces.entities.unit.Player;
+import eu.borderprinces.entities.unit.Prince;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class Game {
     public HashMap<Integer, HashMap<Integer, Tile>> scenario;
     public List<Building> buildings;
     public List<Unit> units;
-    public Player player;
+    public Prince prince;
 
     public Game(HashMap<Integer, HashMap<Integer, Tile>> scenario){
         this.scenario = scenario;

@@ -27,7 +27,10 @@ public class Pathfinder {
 
     public List<Tile> pathfind(Tile from, Tile to) {
         if(from != null && to != null) {
-            return routeFinder.findRoute(from, to);
+            List<Tile> route = routeFinder.findRoute(from, to);
+            // remove the first tile, because that's the starting tile.
+            route.remove(0);
+            return route;
         } else {
             return new ArrayList<>();
         }

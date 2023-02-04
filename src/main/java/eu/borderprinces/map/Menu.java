@@ -1,7 +1,7 @@
 package eu.borderprinces.map;
 
-import eu.borderprinces.entities.unit.Player;
-import eu.borderprinces.entities.unit.Soldier;
+import eu.borderprinces.entities.Unit;
+import eu.borderprinces.entities.unit.Prince;
 import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,8 +31,8 @@ public class Menu {
         return "| - " + paddedMenuOption(action,17);
     }
 
-    public static String healthBar(Player player) {
-        return "| - " + paddedMenuOption("*".repeat(Math.max(0, player.getHealth())),17);
+    public static String healthBar(Prince prince) {
+        return "| - " + paddedMenuOption("*".repeat(Math.max(0, prince.getHealth())),17);
     }
 
     public static String unitBarStart(){
@@ -53,7 +53,7 @@ public class Menu {
         return returnValue;
     }
 
-    public static String unitView(Soldier unit) {
+    public static String unitView(Unit unit) {
         String returnValue = "| " + paddedMenuOption(String.valueOf(unit.getId()),4);
         returnValue += "| " + paddedMenuOption(String.valueOf(unit.getTile().getRow()),4);
         returnValue += "| " + paddedMenuOption(String.valueOf(unit.getTile().getColumn()),7);

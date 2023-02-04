@@ -7,10 +7,10 @@ Third version wil have the following features:
 - default = 1 ap
 - forest = 2 ap
 - hills = 3 ap~~
-BP-026: add grain fields
-- building for player to build
+~~BP-026: add grain fields
+- building for prince to build
 - adds food to adjacent village
-- can be burned by monsters
+- can be burned by monsters~~
 BP-027: add farmer unit
 - farmer creates farms around villages of same team
 BP-028: add unit roster with commands to village for automatic creation

@@ -5,18 +5,13 @@ import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import eu.borderprinces.entities.Unit;
 import eu.borderprinces.entities.building.Village;
-import eu.borderprinces.entities.unit.Player;
-import eu.borderprinces.entities.unit.Soldier;
-import eu.borderprinces.entities.unit.UnitLogic;
+import eu.borderprinces.entities.unit.*;
 import eu.borderprinces.map.Map;
 import eu.borderprinces.map.Menu;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static eu.borderprinces.BorderPrincesConstants.*;
@@ -37,7 +32,7 @@ public class BorderPrinces {
     }
 
     private static Game processInput(String input, Game game, Scanner sc) {
-        if (game.player.getActionPoints() <= 0) {
+        if (game.prince.getActionPoints() <= 0) {
             System.out.println("You have no actionpoints left, please wait and press enter.");
             sc.nextLine();
             return game;
@@ -47,18 +42,18 @@ public class BorderPrinces {
         ConsoleActions consoleAction = ConsoleActions.get(input);
         switch (consoleAction) {
             case QUIT -> System.exit(130);
-            case DOWN -> game.player.move(game, 1, 0);
-            case UP -> game.player.move(game, -1, 0);
-            case LEFT -> game.player.move(game, 0, -1);
-            case RIGHT -> game.player.move(game, 0, 1);
+            case DOWN -> game.prince.move(game, 1, 0);
+            case UP -> game.prince.move(game, -1, 0);
+            case LEFT -> game.prince.move(game, 0, -1);
+            case RIGHT -> game.prince.move(game, 0, 1);
             case CLEAR_LAIR -> {
-                Tile currentTile = game.player.getTile();
+                Tile currentTile = game.prince.getTile();
                 if (MONSTER_LAIR.equals(currentTile.getBuilding().getIcon())) {
                     currentTile.destroyBuilding(game);
                 }
             }
             case BUILD_VILLAGE -> {
-                Tile currentTile = game.player.getTile();
+                Tile currentTile = game.prince.getTile();
                 if (currentTile.getBuilding() == null &&
                         BARE_GROUND.equals(currentTile.getTerrain().getIcon())) {
                     currentTile.createVillage(VILLAGE);
@@ -66,16 +61,10 @@ public class BorderPrinces {
                 }
             }
             case SOW_GRAIN_FIELD -> {
-                Tile currentTile = game.player.getTile();
+                Tile currentTile = game.prince.getTile();
                 if (currentTile.getBuilding() == null &&
                         FERTILE_GROUND.equals(currentTile.getTerrain().getIcon())) {
-                    Village nearestFriendlyVillage = game.buildings.stream()
-                            .filter(building -> building instanceof Village)
-                            .map(building -> ((Village) building))
-                            .min(Comparator.comparing(village -> village.getTile().getDistance(game.player.getTile())))
-                            .orElseThrow();
-                    currentTile.createGrainField(GRAIN_FIELD, nearestFriendlyVillage);
-                    game.buildings.add(currentTile.getBuilding());
+                    currentTile.createGrainField(game);
                 }
             }
             case RECRUIT -> recruitOption(game, sc);
@@ -86,48 +75,56 @@ public class BorderPrinces {
                 input = sc.nextLine();
                 return ScenarioLoader.createGame(ScenarioMaps.scenarios.get(input));
             }
-            default -> game.player.addActionPoint();
+            default -> game.prince.addActionPoint();
         }
-        game.player.removeActionPoint();
+        game.prince.removeActionPoint();
         return game;
     }
 
     private static void recruitOption(Game game, Scanner sc) {
-        Player player = game.player;
+        Prince prince = game.prince;
         long currentUnits = game.units.stream()
-                .filter(unit -> player.getTeamId() == unit.getTeamId())
+                .filter(unit -> prince.getTeamId() == unit.getTeamId())
                 .count();
         // player doesn't count
         currentUnits--;
         long currentBuildings = game.buildings.stream()
                 .filter(building -> building instanceof Village)
                 .map(building -> ((Village) building))
-                .filter(building -> player.getTeamId() == building.getTeamId())
+                .filter(building -> prince.getTeamId() == building.getTeamId())
                 .mapToInt(Village::getGrainFields)
                 .sum();
         System.out.println("current unit count: " + currentUnits);
         System.out.println("current village count: " + currentBuildings);
         if (currentUnits < currentBuildings) {
-            Tile recruitmentTile = player.getTile();
+            Tile recruitmentTile = prince.getTile();
+            UnitType unitType = null;
+            while (unitType == null) {
+                UnitType.recruitables().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
+                System.out.println("current unit count: " + currentUnits);
+                unitType = UnitType.getRecruitable(sc.nextLine());
+            }
             UnitLogic unitLogic = null;
             while (unitLogic == null) {
-                Arrays.stream(UnitLogic.values()).forEach(ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
+                unitType.getUnitLogicList().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
                 System.out.println("current unit count: " + currentUnits);
-                unitLogic = UnitLogic.get(sc.nextLine());
+                unitLogic = unitType.getUnitLogic(sc.nextLine());
             }
-            new Soldier(player.getTeamId(), recruitmentTile, player.getIcon(), game, unitLogic);
+            switch (unitType){
+                case SOLDIER -> new Soldier(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
+                case FARMER -> new Farmer(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
+                default -> throw new RuntimeException();
+            }
         } else {
             System.out.println("your kingdom can't support more units on the field");
         }
     }
 
     private static void commandOption(Game game, Scanner sc) {
-        Player player = game.player;
-        List<Soldier> units = game.units.stream()
-                .filter(unit -> unit instanceof Soldier)
-                .map(unit -> ((Soldier) unit))
-                .filter(unit -> player.getTeamId() == unit.getTeamId())
-                .filter(unit -> unit.getId() != player.getId())
+        Prince prince = game.prince;
+        List<Unit> units = game.units.stream()
+                .filter(unit -> prince.getTeamId() == unit.getTeamId())
+                .filter(unit -> unit.getId() != prince.getId())
                 .sorted(Comparator.comparingLong(Unit::getId))
                 .toList();
 
@@ -142,24 +139,26 @@ public class BorderPrinces {
 
         if (id != null) {
             final long finalId = id;
-            UnitLogic unitLogic = null;
-            while (unitLogic == null) {
-                Arrays.stream(UnitLogic.values()).forEach(ul -> System.out.println(ul.getSelection() + " for " + ul.getName()));
-                unitLogic = UnitLogic.get(sc.nextLine());
-            }
-            final UnitLogic finalUnitLogic = unitLogic;
-            units.stream()
+            final Optional<Unit> optionalUnit = units.stream()
                     .filter(unit -> finalId == unit.getId())
-                    .findFirst()
-                    .ifPresent(unit -> unit.setUnitLogic(finalUnitLogic));
+                    .findFirst();
+            if(optionalUnit.isPresent()){
+                Unit unit = optionalUnit.get();
+                UnitLogic unitLogic = null;
+                while (unitLogic == null) {
+                    unit.getUnitType().getUnitLogicList().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
+                    unitLogic = unit.getUnitType().getUnitLogic(sc.nextLine());
+                }
+                unit.setUnitLogic(unitLogic);
+            }
         }
     }
 
     private static String checkInput(String input, Game game, Scanner sc) {
-        if (ConsoleActions.options(game.player.getTile()).stream()
+        if (ConsoleActions.options(game.prince.getTile()).stream()
                 .noneMatch(options -> options.equals(input))) {
             System.out.println("select one of the following inputs");
-            ConsoleActions.options(game.player.getTile())
+            ConsoleActions.options(game.prince.getTile())
                     .forEach(System.out::println);
             return checkInput(sc.nextLine(), game, sc);
         } else {

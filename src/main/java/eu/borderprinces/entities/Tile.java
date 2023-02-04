@@ -7,10 +7,7 @@ import eu.borderprinces.entities.pathfinding.GraphNode;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static eu.borderprinces.BorderPrincesConstants.*;
 
@@ -75,9 +72,15 @@ public class Tile implements GraphNode {
         setCurrentIcon();
     }
 
-    public void createGrainField(String grainField, Village nearestVillage) {
-        this.building = new Grainfield(TEAM_PLAYER, this, grainField, nearestVillage);
+    public void createGrainField(Game game) {
+        Village nearestFriendlyVillage = game.buildings.stream()
+                .filter(building -> building instanceof Village)
+                .map(building -> ((Village) building))
+                .min(Comparator.comparing(village -> village.getTile().getDistance(game.prince.getTile())))
+                .orElseThrow();
+        this.building = new Grainfield(TEAM_PLAYER, this, GRAIN_FIELD, nearestFriendlyVillage);
         setCurrentIcon();
+        game.buildings.add(this.getBuilding());
     }
 
     public void addUnit(Unit unit) {
