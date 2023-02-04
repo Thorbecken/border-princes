@@ -11,8 +11,8 @@ Third version wil have the following features:
 - building for prince to build
 - adds food to adjacent village
 - can be burned by monsters~~
-BP-027: add farmer unit
-- farmer creates farms around villages of same team
+~~BP-027: add farmer unit
+- farmer creates farms around villages of same team~~
 BP-028: add unit roster with commands to village for automatic creation
 BP-029: add command build village
 - builds village
