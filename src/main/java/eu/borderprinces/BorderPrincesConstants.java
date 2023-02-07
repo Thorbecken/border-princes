@@ -15,5 +15,8 @@ public class BorderPrincesConstants {
     public static String MONSTER_LAIR = "π";
     public static String MONSTER = "M";
     public static String PLAYER = "|";
+    public static String SOLDIER = "s";
+    public static String FARMER = "f";
+    public static String BUILDER = "b";
     public static String VILLAGE = "n";
 }

@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Soldier extends Unit {
 
     public Soldier(long teamid, @NonNull Tile tile, @NonNull String icon, @NonNull Game game, UnitLogic unitLogic) {
-        super(teamid, tile, icon, 3, game, unitLogic, Color.PURPLE);
+        super(teamid, tile, icon, 2, game, unitLogic, Color.PURPLE);
     }
 
     @Override

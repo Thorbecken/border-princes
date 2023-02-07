@@ -1,16 +1,15 @@
 package eu.borderprinces.entities.building;
 
-import eu.borderprinces.entities.Building;
 import eu.borderprinces.entities.Color;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class Village extends Building {
+public class Village extends Recruiter {
 
     @Getter
-    int grainFields;
+    private int grainFields;
 
     public Village(long teamId, @NonNull Tile tile, @NonNull String icon) {
         super(teamId, tile, icon, Color.PURPLE);
@@ -29,4 +28,11 @@ public class Village extends Building {
 
     }
 
+    public void addGrainField() {
+        this.grainFields++;
+    }
+
+    public void removeGrainField() {
+        this.grainFields++;
+    }
 }

@@ -1,5 +1,6 @@
 package eu.borderprinces.entities.unit;
 
+import eu.borderprinces.BorderPrincesConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,15 +12,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum UnitType {
 
-    SOLDIER("Soldier", "s", true, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
-    PRINCE("Prince", "p", false, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
-    MONSTER("Monster", "m", false, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
-    FARMER("Farmer", "f", true, List.of(UnitLogic.FARM)),
-    BUILDER("Builder", "b", true, List.of(UnitLogic.BUILD_VILLAGE));
+    SOLDIER("Soldier", "s", true, BorderPrincesConstants.SOLDIER, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
+    PRINCE("Prince", "p", false, BorderPrincesConstants.PLAYER, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
+    MONSTER("Monster", "m", false, BorderPrincesConstants.MONSTER, List.of(UnitLogic.DEFEND, UnitLogic.PATROL, UnitLogic.SEARCH_AND_DESTROY)),
+    FARMER("Farmer", "f", true, BorderPrincesConstants.FARMER, List.of(UnitLogic.FARM)),
+    BUILDER("Builder", "b", true, BorderPrincesConstants.BUILDER, List.of(UnitLogic.BUILD_VILLAGE));
 
     private final String name;
     private final String selectionShortcut;
     private final boolean recruitable;
+    private final String icon;
     private final List<UnitLogic> unitLogicList;
 
     public static UnitType get(String value) {

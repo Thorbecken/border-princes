@@ -40,9 +40,9 @@ public class ScenarioLoader {
     }
 
     private static void generatePlayerBuildings(List<Tile> playerStartingTiles, Game game) {
-        playerStartingTiles.forEach(village -> {
-            village.createVillage();
-            game.buildings.add(village.getBuilding());
+        playerStartingTiles.forEach(capitol -> {
+            capitol.createCaptiol();
+            game.buildings.add(capitol.getBuilding());
         });
     }
 

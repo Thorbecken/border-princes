@@ -162,9 +162,9 @@ public abstract class Unit implements Target {
         if (this.getTile().getBuilding() == null
                 && FERTILE_GROUND.equals(this.getTile().getTerrain().getIcon())) {
             this.getTile().createGrainField(this.game);
-            this.currentTarget = null;
+            this.moveToTile = null;
         } else {
-            if (currentTarget == null) {
+            if (moveToTile == null) {
                 this.setCurrentEmptyGroundTarget(FERTILE_GROUND);
             }
             this.moveRandomToTarget();
@@ -175,12 +175,14 @@ public abstract class Unit implements Target {
         if (this.getTile().getBuilding() == null
                 && BARE_GROUND.equals(this.getTile().getTerrain().getIcon())) {
             this.getTile().createVillage();
-            this.currentTarget = null;
+            this.moveToTile = null;
         } else {
-            if (currentTarget == null) {
+            if (moveToTile == null) {
                 this.setCurrentEmptyGroundTarget(BARE_GROUND);
             }
-            this.moveRandomToTarget();
+            if (moveToTile != null) {
+                this.moveRandomToTarget();
+            }
         }
     }
 
@@ -191,7 +193,7 @@ public abstract class Unit implements Target {
     protected void moveRandomToTarget() {
         Random rand = new Random();
         int direction = rand.nextInt(0, 9);
-        if (direction > 1 && !currentPath.isEmpty()) {
+        if (direction > 1 && currentPath != null && !currentPath.isEmpty()) {
             Tile nextTile = currentPath.remove(0);
             this.move(nextTile);
         } else if (direction == 1) {
@@ -217,8 +219,10 @@ public abstract class Unit implements Target {
                 .map(Building::getTile)
                 .min(Comparator.comparingInt(x -> x.getDistance(this.getTile())))
                 .map(Tile::getBuilding)
-                .orElseThrow();
-        this.calculatePath();
+                .orElse(null);
+        if (currentTarget != null) {
+            this.calculatePath();
+        }
     }
 
     protected void setCurrentEmptyGroundTarget(String terrainType) {
@@ -228,7 +232,7 @@ public abstract class Unit implements Target {
                 .filter(tile -> tile.getBuilding() == null)
                 .min(Comparator.comparingInt(x -> x.getDistance(this.getTile())))
                 .orElse(null);
-        if(moveToTile != null) {
+        if (moveToTile != null) {
             this.calculatePathToTile();
         }
     }

@@ -1,9 +1,11 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.building.Capitol;
 import eu.borderprinces.entities.building.Grainfield;
 import eu.borderprinces.entities.building.Lair;
 import eu.borderprinces.entities.building.Village;
 import eu.borderprinces.entities.pathfinding.GraphNode;
+import eu.borderprinces.entities.unit.UnitType;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -63,12 +65,17 @@ public class Tile implements GraphNode {
     }
 
     public void createLair(long teamId) {
-        this.building = new Lair(teamId, this, MONSTER_LAIR, MONSTER);
+        this.building = new Lair(teamId, this, MONSTER_LAIR, UnitType.MONSTER);
         setCurrentIcon();
     }
 
     public void createVillage() {
         this.building = new Village(TEAM_PLAYER, this, VILLAGE);
+        setCurrentIcon();
+    }
+
+    public void createCaptiol() {
+        this.building = new Capitol(TEAM_PLAYER, this, VILLAGE);
         setCurrentIcon();
     }
 

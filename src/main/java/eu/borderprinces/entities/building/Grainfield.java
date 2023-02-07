@@ -13,7 +13,7 @@ public class Grainfield extends Building {
     public Grainfield(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull Village village) {
         super(teamId, tile, icon, Color.PURPLE);
         this.village = village;
-        this.village.grainFields++;
+        this.village.addGrainField();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class Grainfield extends Building {
 
     @Override
     public void destroy(Game game) {
-        this.village.grainFields--;
+        this.village.removeGrainField();
         game.buildings.remove(this);
     }
 }
