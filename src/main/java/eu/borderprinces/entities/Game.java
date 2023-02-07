@@ -1,5 +1,6 @@
 package eu.borderprinces.entities;
 
+import eu.borderprinces.entities.building.Capitol;
 import eu.borderprinces.entities.unit.Prince;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Game {
     public List<Building> buildings;
     public List<Unit> units;
     public Prince prince;
+    public Capitol capitol;
 
     public Game(HashMap<Integer, HashMap<Integer, Tile>> scenario){
         this.scenario = scenario;

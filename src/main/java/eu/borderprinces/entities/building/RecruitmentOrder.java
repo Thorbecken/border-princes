@@ -14,4 +14,10 @@ public class RecruitmentOrder {
     private UnitType unitType;
     private UnitLogic unitLogic;
 
+    @Override
+    public String toString() {
+        return "Recruitment order number " + priority +
+                " for a total of " + number + " " + unitType +
+                " with order of " + unitLogic;
+    }
 }

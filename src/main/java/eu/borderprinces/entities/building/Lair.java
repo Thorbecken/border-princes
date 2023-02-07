@@ -15,9 +15,9 @@ public class Lair extends Recruiter {
 
     public Lair(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull UnitType monsterType) {
         super(teamId, tile, icon, Color.RED);
-        this.addRecipe(new RecruitmentOrder(1, 1, monsterType, DEFEND));
-        this.addRecipe(new RecruitmentOrder(2, 1, monsterType, PATROL));
-        this.addRecipe(new RecruitmentOrder(3, 99, monsterType, SEARCH_AND_DESTROY));
+        this.addOrder(new RecruitmentOrder(1, 1, monsterType, DEFEND));
+        this.addOrder(new RecruitmentOrder(2, 1, monsterType, PATROL));
+        this.addOrder(new RecruitmentOrder(3, 99, monsterType, SEARCH_AND_DESTROY));
     }
 
     @Override

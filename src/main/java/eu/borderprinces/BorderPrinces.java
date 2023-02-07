@@ -4,14 +4,20 @@ import eu.borderprinces.entities.Building;
 import eu.borderprinces.entities.Game;
 import eu.borderprinces.entities.Tile;
 import eu.borderprinces.entities.Unit;
-import eu.borderprinces.entities.building.Village;
-import eu.borderprinces.entities.unit.*;
+import eu.borderprinces.entities.building.Capitol;
+import eu.borderprinces.entities.building.RecruitmentOrder;
+import eu.borderprinces.entities.unit.Prince;
+import eu.borderprinces.entities.unit.UnitLogic;
+import eu.borderprinces.entities.unit.UnitType;
 import eu.borderprinces.map.Map;
 import eu.borderprinces.map.Menu;
 import eu.borderprinces.map.ScenarioLoader;
 import eu.borderprinces.map.ScenarioMaps;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import static eu.borderprinces.BorderPrincesConstants.*;
@@ -82,43 +88,37 @@ public class BorderPrinces {
     }
 
     private static void recruitOption(Game game, Scanner sc) {
-        Prince prince = game.prince;
-        long currentUnits = game.units.stream()
-                .filter(unit -> prince.getTeamId() == unit.getTeamId())
-                .count();
-        // player doesn't count
-        currentUnits--;
-        long currentBuildings = game.buildings.stream()
-                .filter(building -> building instanceof Village)
-                .map(building -> ((Village) building))
-                .filter(building -> prince.getTeamId() == building.getTeamId())
-                .mapToInt(Village::getGrainFields)
-                .sum();
-        System.out.println("current unit count: " + currentUnits);
-        System.out.println("current village count: " + currentBuildings);
-        if (currentUnits < currentBuildings) {
-            Tile recruitmentTile = prince.getTile();
-            UnitType unitType = null;
-            while (unitType == null) {
-                UnitType.recruitables().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
-                System.out.println("current unit count: " + currentUnits);
-                unitType = UnitType.getRecruitable(sc.nextLine());
-            }
-            UnitLogic unitLogic = null;
-            while (unitLogic == null) {
-                unitType.getUnitLogicList().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
-                System.out.println("current unit count: " + currentUnits);
-                unitLogic = unitType.getUnitLogic(sc.nextLine());
-            }
-            switch (unitType){
-                case SOLDIER -> new Soldier(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
-                case FARMER -> new Farmer(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
-                case BUILDER -> new Builder(prince.getTeamId(), recruitmentTile, prince.getIcon(), game, unitLogic);
-                default -> throw new RuntimeException();
-            }
-        } else {
-            System.out.println("your kingdom can't support more units on the field");
+        Capitol capitol = game.capitol;
+        capitol.currentOrders().forEach(System.out::println);
+
+        Integer priority = null;
+        Long unitNumber = null;
+        UnitType unitType = null;
+        UnitLogic unitLogic = null;
+
+
+        while (priority == null) {
+            System.out.println("Please enter priority");
+            try {
+                priority = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException ignore){}
         }
+        while (unitNumber == null) {
+            System.out.println("Please enter number of units");
+            try {
+                unitNumber = Long.parseLong(sc.nextLine());
+            } catch (NumberFormatException ignore){}
+        }
+        while (unitType == null) {
+            UnitType.recruitables().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
+            unitType = UnitType.getRecruitable(sc.nextLine());
+        }
+        while (unitLogic == null) {
+            unitType.getUnitLogicList().forEach(ul -> System.out.println(ul.getSelectionShortcut() + " for " + ul.getName()));
+            unitLogic = unitType.getUnitLogic(sc.nextLine());
+        }
+
+        capitol.addOrder(new RecruitmentOrder(priority, unitNumber, unitType, unitLogic));
     }
 
     private static void commandOption(Game game, Scanner sc) {
@@ -143,7 +143,7 @@ public class BorderPrinces {
             final Optional<Unit> optionalUnit = units.stream()
                     .filter(unit -> finalId == unit.getId())
                     .findFirst();
-            if(optionalUnit.isPresent()){
+            if (optionalUnit.isPresent()) {
                 Unit unit = optionalUnit.get();
                 UnitLogic unitLogic = null;
                 while (unitLogic == null) {

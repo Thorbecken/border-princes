@@ -12,10 +12,10 @@ public class Capitol extends Village {
 
     public Capitol(long teamId, @NonNull Tile tile, @NonNull String icon) {
         super(teamId, tile, icon);
-        this.addRecipe(new RecruitmentOrder(1, 1, UnitType.FARMER, FARM));
-        this.addRecipe(new RecruitmentOrder(2, 3, UnitType.SOLDIER, SEARCH_AND_DESTROY));
-        this.addRecipe(new RecruitmentOrder(3, 1, UnitType.BUILDER, BUILD_VILLAGE));
-        this.addRecipe(new RecruitmentOrder(4, 99, UnitType.SOLDIER, SEARCH_AND_DESTROY));
+        this.addOrder(new RecruitmentOrder(1, 1, UnitType.FARMER, FARM));
+        this.addOrder(new RecruitmentOrder(2, 3, UnitType.SOLDIER, SEARCH_AND_DESTROY));
+        this.addOrder(new RecruitmentOrder(3, 1, UnitType.BUILDER, BUILD_VILLAGE));
+        this.addOrder(new RecruitmentOrder(4, 99, UnitType.SOLDIER, SEARCH_AND_DESTROY));
     }
 
     @Override

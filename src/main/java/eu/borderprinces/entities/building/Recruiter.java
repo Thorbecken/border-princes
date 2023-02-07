@@ -4,10 +4,7 @@ import eu.borderprinces.entities.*;
 import eu.borderprinces.entities.unit.UnitFactory;
 import lombok.NonNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public abstract class Recruiter extends Building {
 
@@ -16,18 +13,19 @@ public abstract class Recruiter extends Building {
     }
 
     private final List<Unit> units = new ArrayList<>();
-    private final HashMap<Integer, RecruitmentOrder> recruitmentRecipes = new HashMap<>();
+    private final HashMap<Integer, RecruitmentOrder> recruitmentOrders = new HashMap<>();
 
     public void recruit(Game game) {
         this.purgeTheDead();
 
-        List<RecruitmentOrder> recipes = recruitmentRecipes.values()
+        List<RecruitmentOrder> recipes = recruitmentOrders.values()
                 .stream().sorted(Comparator.comparing(RecruitmentOrder::getPriority))
                 .toList();
 
         for (RecruitmentOrder recruitmentOrder : recipes) {
             long count = units.stream()
                     .filter(unit -> unit.getUnitType() == recruitmentOrder.getUnitType())
+                    .filter(unit -> unit.getUnitLogic() == recruitmentOrder.getUnitLogic())
                     .count();
             if (count < recruitmentOrder.getNumber()) {
                 units.add(UnitFactory.createUnit(
@@ -49,12 +47,16 @@ public abstract class Recruiter extends Building {
         deadUnits.forEach(units::remove);
     }
 
-    public void addRecipe(RecruitmentOrder recruitmentOrder) {
-        recruitmentRecipes.put(recruitmentOrder.getPriority(), recruitmentOrder);
+    public void addOrder(RecruitmentOrder recruitmentOrder) {
+        recruitmentOrders.put(recruitmentOrder.getPriority(), recruitmentOrder);
     }
 
 
     protected int getCurrentNumberOfUnits() {
         return units.size();
+    }
+
+    public Collection<RecruitmentOrder> currentOrders() {
+        return recruitmentOrders.values();
     }
 }

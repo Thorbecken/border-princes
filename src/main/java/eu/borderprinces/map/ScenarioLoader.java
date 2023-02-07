@@ -1,8 +1,9 @@
 package eu.borderprinces.map;
 
 import eu.borderprinces.entities.Game;
-import eu.borderprinces.entities.unit.Prince;
 import eu.borderprinces.entities.Tile;
+import eu.borderprinces.entities.building.Capitol;
+import eu.borderprinces.entities.unit.Prince;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ public class ScenarioLoader {
         playerStartingTiles.forEach(capitol -> {
             capitol.createCaptiol();
             game.buildings.add(capitol.getBuilding());
+            game.capitol = ((Capitol) capitol.getBuilding());
         });
     }
 
