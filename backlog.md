@@ -13,7 +13,7 @@ Third version wil have the following features:
 - can be burned by monsters~~
 ~~BP-027: add farmer unit
 - farmer creates farms around villages of same team~~
-BP-028: add unit roster with commands to village for automatic creation
+~~BP-028: add unit roster with commands to village for automatic creation~~
 ~~BP-029: add command build village
 - builds village~~
 
