@@ -7,13 +7,12 @@ import eu.borderprinces.entities.Tile;
 import lombok.NonNull;
 
 public class Grainfield extends Building {
+    private final Capitol capitol;
 
-    private final Village village;
-
-    public Grainfield(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull Village village) {
+    public Grainfield(long teamId, @NonNull Tile tile, @NonNull String icon, @NonNull Capitol capitol) {
         super(teamId, tile, icon, Color.PURPLE);
-        this.village = village;
-        this.village.addGrainField();
+        this.capitol = capitol;
+        this.capitol.addGrainField();
     }
 
     @Override
@@ -23,7 +22,7 @@ public class Grainfield extends Building {
 
     @Override
     public void destroy(Game game) {
-        this.village.removeGrainField();
+        this.capitol.removeGrainField();
         game.buildings.remove(this);
     }
 }

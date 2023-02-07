@@ -80,12 +80,7 @@ public class Tile implements GraphNode {
     }
 
     public void createGrainField(Game game) {
-        Village nearestFriendlyVillage = game.buildings.stream()
-                .filter(building -> building instanceof Village)
-                .map(building -> ((Village) building))
-                .min(Comparator.comparing(village -> village.getTile().getDistance(game.prince.getTile())))
-                .orElseThrow();
-        this.building = new Grainfield(TEAM_PLAYER, this, GRAIN_FIELD, nearestFriendlyVillage);
+        this.building = new Grainfield(TEAM_PLAYER, this, GRAIN_FIELD, game.capitol);
         setCurrentIcon();
         game.buildings.add(this.getBuilding());
     }

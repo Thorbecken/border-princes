@@ -53,6 +53,7 @@ public abstract class Recruiter extends Building {
 
 
     protected int getCurrentNumberOfUnits() {
+        this.purgeTheDead();
         return units.size();
     }
 
